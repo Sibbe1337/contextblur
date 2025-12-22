@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ContextBlur</title>
+  <link rel="stylesheet" href="sidepanel.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <div class="glass-panel">
+      <div class="header">
+        <div class="header-left">
+          <div class="logo-icon">
+            <svg class="logo-svg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+            </svg>
+          </div>
+          <div>
+            <h1 class="title">ContextBlur</h1>
+            <p class="subtitle">Privacy on demand</p>
+          </div>
+        </div>
+        <div class="version">v1.0</div>
+      </div>
+    </div>
+
+    <!-- Main Control -->
+    <div class="glass-panel">
+      <div class="control-row">
+        <div class="control-left">
+          <div class="control-icon">
+            <svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+            </svg>
+          </div>
+          <div>
+            <h2 class="control-title">Selection Mode</h2>
+            <p class="control-subtitle" id="modeStatus">Click elements to blur</p>
+          </div>
+        </div>
+        
+        <label class="toggle-label">
+          <input type="checkbox" id="blurModeToggle" class="toggle-input">
+          <div class="toggle-track">
+            <div class="toggle-thumb"></div>
+          </div>
+        </label>
+      </div>
+
+      <div id="activeIndicator" class="active-indicator hidden">
+        <div class="indicator-content">
+          <div class="pulse-dot"></div>
+          <span class="indicator-text">Blur mode active — click any element</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats Card -->
+    <div class="glass-panel">
+      <div class="stats-header">
+        <h3 class="stats-title">Blurred Elements</h3>
+        <div id="blurCount" class="count-badge">0</div>
+      </div>
+      
+      <div class="button-row">
+        <button id="clearAllBtn" class="btn-secondary" disabled>
+          Clear All
+        </button>
+        <button id="confirmClearBtn" class="btn-danger hidden">
+          Confirm Clear?
+        </button>
+      </div>
+      
+      <p id="emptyState" class="state-text">
+        No elements blurred on this page
+      </p>
+      <p id="hasBlursState" class="state-text hidden">
+        Blurs persist after page refresh
+      </p>
+    </div>
+
+    <!-- Auto-blur Feature (Optional) -->
+    <div class="glass-panel feature-card">
+      <div class="feature-content">
+        <div class="feature-icon">
+          <svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+          </svg>
+        </div>
+        <div class="feature-text">
+          <div class="feature-header">
+            <h3 class="feature-title">Auto-blur (optional)</h3>
+            <span class="optional-badge">Optional</span>
+          </div>
+          <p class="feature-description">
+            Scan visible text on this page to find and blur emails, phone numbers, SSNs, and credit cards.
+          </p>
+        </div>
+      </div>
+
+      <!-- Type Selection -->
+      <div class="autoblur-options">
+        <label class="checkbox-label">
+          <input type="checkbox" id="blurEmails" checked>
+          <span class="checkbox-text">📧 Emails</span>
+        </label>
+        <label class="checkbox-label">
+          <input type="checkbox" id="blurPhones" checked>
+          <span class="checkbox-text">📱 Phone numbers</span>
+        </label>
+        <label class="checkbox-label">
+          <input type="checkbox" id="blurCards" checked>
+          <span class="checkbox-text">💳 Credit cards</span>
+        </label>
+        <label class="checkbox-label">
+          <input type="checkbox" id="blurSSN" checked>
+          <span class="checkbox-text">🔐 SSN / Personnummer</span>
+        </label>
+      </div>
+
+      <!-- Run Button -->
+      <button id="runAutoBlurBtn" class="btn-primary">
+        Run auto-blur now
+      </button>
+      
+      <!-- Result -->
+      <p id="autoBlurResult" class="autoblur-result hidden"></p>
+
+      <!-- Disclosure notice -->
+      <p class="disclosure-text">
+        When you run auto-blur, ContextBlur scans visible text on this page locally. No data is sent anywhere.
+      </p>
+    </div>
+
+    <!-- Keyboard Shortcuts -->
+    <div class="glass-panel">
+      <h3 class="shortcuts-title">Keyboard Shortcuts</h3>
+      <div class="shortcuts-list">
+        <div class="shortcut-item">
+          <kbd>Ctrl</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>B</kbd>
+          <span class="shortcut-desc">Toggle blur mode</span>
+        </div>
+        <div class="shortcut-item">
+          <kbd>Esc</kbd>
+          <span class="shortcut-desc">Deactivate blur mode</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tips -->
+    <div class="glass-panel tip-card">
+      <svg class="tip-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+      </svg>
+      <div>
+        <p class="tip-text">
+          <strong>Tip:</strong> Blurred content stays hidden even after refresh. Perfect for screen sharing!
+        </p>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <p class="footer-text">
+        100% Local Processing • No Data Transmitted • No Analytics
+      </p>
+    </div>
+  </div>
+
+  <!-- Disclosure Modal -->
+  <div id="disclosureModal" class="modal-overlay hidden">
+    <div class="modal-content">
+      <div class="modal-header">
+        <svg class="modal-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+        <h2 class="modal-title">Auto-blur Privacy Notice</h2>
+      </div>
+      <div class="modal-body">
+        <p>When you use auto-blur, ContextBlur will:</p>
+        <ul>
+          <li>Scan <strong>visible text</strong> on the current page</li>
+          <li>Detect patterns matching emails, phone numbers, SSNs, and credit cards</li>
+          <li>Blur any matches found</li>
+        </ul>
+        <div class="modal-highlight">
+          <strong>Privacy guarantee:</strong> All scanning happens locally in your browser. No text content is stored or transmitted anywhere.
+        </div>
+        <p class="modal-note">This notice appears once. You can run auto-blur anytime after accepting.</p>
+      </div>
+      <div class="modal-actions">
+        <button id="modalCancelBtn" class="btn-secondary">Cancel</button>
+        <button id="modalAcceptBtn" class="btn-primary">I understand & continue</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="sidepanel.js"></script>
+</body>
+</html>

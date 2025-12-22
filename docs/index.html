@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ContextBlur - Privacy Policy</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(180deg, #faf5ff 0%, #f3e8ff 50%, #ede9fe 100%);
+      min-height: 100vh;
+      padding: 40px 20px;
+      -webkit-font-smoothing: antialiased;
+      color: #1f2937;
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 32px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .logo {
+      width: 56px;
+      height: 56px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 6px -1px rgba(139, 92, 246, 0.4);
+    }
+
+    .logo svg {
+      width: 28px;
+      height: 28px;
+      color: white;
+    }
+
+    .title-group h1 {
+      font-size: 24px;
+      font-weight: 600;
+      color: #111827;
+    }
+
+    .title-group p {
+      font-size: 14px;
+      color: #6b7280;
+      margin-top: 2px;
+    }
+
+    h2 {
+      font-size: 18px;
+      font-weight: 600;
+      color: #111827;
+      margin-top: 28px;
+      margin-bottom: 12px;
+    }
+
+    h2:first-of-type {
+      margin-top: 0;
+    }
+
+    p {
+      color: #4b5563;
+      margin-bottom: 16px;
+    }
+
+    .highlight {
+      background: #f5f3ff;
+      border: 1px solid #ede9fe;
+      border-radius: 12px;
+      padding: 16px 20px;
+      margin: 20px 0;
+    }
+
+    .highlight p {
+      margin-bottom: 0;
+      color: #5b21b6;
+      font-weight: 500;
+    }
+
+    .check-list {
+      list-style: none;
+      margin: 16px 0;
+    }
+
+    .check-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 10px;
+      color: #374151;
+    }
+
+    .check-list li::before {
+      content: "✓";
+      color: #10b981;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+
+    .footer {
+      margin-top: 32px;
+      padding-top: 24px;
+      border-top: 1px solid #e5e7eb;
+      text-align: center;
+    }
+
+    .footer p {
+      font-size: 13px;
+      color: #9ca3af;
+      margin-bottom: 8px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%);
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      color: white;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    a {
+      color: #7c3aed;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 600px) {
+      .card {
+        padding: 24px;
+      }
+      
+      .header {
+        flex-direction: column;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <div class="header">
+        <div class="logo">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+          </svg>
+        </div>
+        <div class="title-group">
+          <h1>ContextBlur</h1>
+          <p>Privacy Policy</p>
+        </div>
+      </div>
+
+      <div class="highlight">
+        <p>ContextBlur does not collect, transmit, or share any personal data. All processing happens locally in your browser.</p>
+      </div>
+
+      <h2>Data Collection</h2>
+      <p>ContextBlur is designed with privacy as the core principle. The extension does not collect any personal information, browsing history, or user behavior data.</p>
+
+      <h2>Local Storage</h2>
+      <p>The extension stores CSS selectors of elements you choose to blur in your browser's local storage (chrome.storage.local), keyed by page URL. This data:</p>
+      <ul class="check-list">
+        <li>Never leaves your browser</li>
+        <li>Is not transmitted to any server</li>
+        <li>Can be cleared at any time using the "Clear All" button</li>
+        <li>Contains only CSS selectors, not personal content</li>
+      </ul>
+
+      <h2>Auto-blur Feature</h2>
+      <p>When you click "Run auto-blur now", the extension scans visible text on the current page to detect patterns matching emails, phone numbers, SSNs, and credit cards. This processing:</p>
+      <ul class="check-list">
+        <li>Happens entirely in your browser</li>
+        <li>Only runs when you explicitly click the button</li>
+        <li>Requires acceptance of a disclosure on first use</li>
+        <li>Does not store or transmit any detected content</li>
+      </ul>
+
+      <h2>Third Parties</h2>
+      <p>No data is shared with any third party. There are no analytics, advertising, tracking services, or external dependencies. All code is bundled locally in the extension package.</p>
+
+      <h2>Network Requests</h2>
+      <p>ContextBlur makes zero network requests. The extension operates entirely offline and does not communicate with any external servers.</p>
+
+      <h2>Your Rights</h2>
+      <p>You can clear all stored blur data at any time by clicking "Clear All" in the side panel, or by removing the extension from Chrome.</p>
+
+      <h2>Contact</h2>
+      <p>For questions about this privacy policy, please open an issue on our <a href="https://github.com/YOUR_USERNAME/contextblur" target="_blank">GitHub repository</a>.</p>
+
+      <div class="footer">
+        <p>Last updated: December 2024</p>
+        <span class="badge">100% Local</span>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
+
