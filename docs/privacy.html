@@ -3,11 +3,145 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="refresh" content="0; url=index.html">
   <title>Privacy Policy - ContextBlur</title>
+  <meta name="description" content="ContextBlur privacy policy. No data collection, no tracking, no analytics. All processing happens locally in your browser.">
+  <link rel="canonical" href="https://contextblur.app/privacy.html">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Privacy Policy - ContextBlur">
+  <meta property="og:description" content="ContextBlur does not collect, transmit, or share any personal data. All processing happens locally in your browser.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://contextblur.app/privacy.html">
+  <meta property="og:site_name" content="ContextBlur">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Privacy Policy - ContextBlur">
+  <meta name="twitter:description" content="ContextBlur does not collect, transmit, or share any personal data. All processing happens locally in your browser.">
+
+  <!-- JSON-LD Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Privacy Policy",
+    "description": "ContextBlur privacy policy. No data collection, no tracking, no analytics. All processing happens locally in your browser.",
+    "url": "https://contextblur.app/privacy.html",
+    "inLanguage": "en",
+    "isPartOf": {
+      "@type": "WebSite",
+      "name": "ContextBlur",
+      "url": "https://contextblur.app/"
+    },
+    "dateModified": "2026-02-01",
+    "publisher": {
+      "@type": "Organization",
+      "name": "ContextBlur"
+    }
+  }
+  </script>
+
+  <link rel="stylesheet" href="/blog.css">
 </head>
 <body>
-  <p>Redirecting to <a href="index.html">Privacy Policy</a>...</p>
+
+  <!-- ============ NAVIGATION ============ -->
+  <nav class="site-nav">
+    <div class="nav-inner">
+      <a href="/" class="nav-brand">
+        <div class="nav-logo">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+          </svg>
+        </div>
+        <span class="nav-brand-name">ContextBlur</span>
+      </a>
+
+      <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')" aria-label="Toggle navigation">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+      </button>
+
+      <ul class="nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/blog">Blog</a></li>
+        <li><a class="active" href="/privacy.html">Privacy</a></li>
+        <li><a class="nav-install" href="https://chromewebstore.google.com/detail/contextblur/epnjbbgfnlpkaggfpjebakbnnhpogmfh" target="_blank" rel="noopener">Install</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- ============ PRIVACY POLICY ============ -->
+  <main class="article-container">
+    <article class="article-card">
+
+      <header class="article-header">
+        <h1>Privacy Policy</h1>
+      </header>
+
+      <div class="article-body">
+
+        <p>ContextBlur does not collect, transmit, or share any personal data. All processing happens locally in your browser.</p>
+
+        <h2>Data Collection</h2>
+        <p>No personal information, browsing history, or user behavior data is collected. ContextBlur has no servers that receive your data, no analytics pipelines, and no advertising integrations.</p>
+
+        <h2>Local Storage</h2>
+        <p>ContextBlur stores CSS selectors in <code>chrome.storage.local</code>, keyed by page URL. This data:</p>
+        <ul>
+          <li>Never leaves your browser</li>
+          <li>Is not transmitted to any server</li>
+          <li>Can be cleared at any time</li>
+          <li>Contains only CSS selectors (no page content, no personal information)</li>
+        </ul>
+
+        <h2>Auto-blur Feature</h2>
+        <p>The auto-blur feature scans visible text locally in your browser to detect emails, phone numbers, Social Security numbers, and credit card numbers. This process:</p>
+        <ul>
+          <li>Happens entirely in your browser</li>
+          <li>Only runs when you click the auto-blur button</li>
+          <li>Requires disclosure acceptance before first use</li>
+          <li>Does not store or transmit any detected content</li>
+        </ul>
+
+        <h2>Payment Processing</h2>
+        <p>Pro subscriptions are handled through <a href="https://extensionpay.com" target="_blank" rel="noopener">ExtensionPay</a>, which uses Stripe for secure payment processing. ContextBlur does not store or have access to your payment details.</p>
+
+        <h2>Third-Party Services</h2>
+        <p>ContextBlur does not use any analytics, advertising, or tracking services. ExtensionPay is the only external service, used solely for subscription management.</p>
+
+        <h2>Network Requests</h2>
+        <p>ContextBlur makes minimal network requests, limited to ExtensionPay license verification. No browsing data, page content, or personal information is ever transmitted.</p>
+
+        <h2>Your Rights</h2>
+        <p>You can clear all stored data at any time by using the "Clear All" button in the side panel, or by removing the extension entirely. No data persists on any external server because no data is ever sent to one.</p>
+
+        <h2>Contact</h2>
+        <p>If you have questions about this privacy policy, please open an issue on our <a href="https://github.com/sibbe1337/contextblur" target="_blank" rel="noopener">GitHub repository</a>.</p>
+
+        <hr>
+
+        <p><em>Last updated: February 2026</em></p>
+
+      </div>
+
+    </article>
+  </main>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="site-footer">
+    <ul class="footer-links">
+      <li><a href="/">Home</a></li>
+      <li><a href="/blog">Blog</a></li>
+      <li><a href="/privacy.html">Privacy</a></li>
+      <li><a href="https://chromewebstore.google.com/detail/contextblur/epnjbbgfnlpkaggfpjebakbnnhpogmfh" target="_blank" rel="noopener">Chrome Web Store</a></li>
+      <li><a href="https://github.com/sibbe1337/contextblur" target="_blank" rel="noopener">GitHub</a></li>
+    </ul>
+    <p class="footer-copyright">&copy; 2026 ContextBlur</p>
+    <span class="footer-badge">100% Local &mdash; Zero Data Transmitted</span>
+  </footer>
+
 </body>
 </html>
-

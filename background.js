@@ -1,32 +1,74 @@
 /**
  * ContextBlur - Background Service Worker
- * Handles extension state, messaging, and side panel management
+ * Handles extension state, messaging, side panel management, and Pro licensing
  */
+
+importScripts('ExtPay.js');
 
 (() => {
   'use strict';
 
+  // ExtPay initialization
+  const extpay = ExtPay('contextblur');
+  extpay.startBackground();
+
+  // Pro status cache
+  let cachedProStatus = null;
+  let proStatusLastChecked = 0;
+  const PRO_STATUS_CACHE_MS = 60000;
+
+  // Listen for payment events
+  extpay.onPaid.addListener((user) => {
+    cachedProStatus = buildProStatus(user);
+    broadcastProStatus(cachedProStatus);
+  });
+
+  extpay.onTrialStarted.addListener((user) => {
+    cachedProStatus = buildProStatus(user);
+    broadcastProStatus(cachedProStatus);
+  });
+
   // State management per tab
   const tabStates = new Map();
 
-  // Initialize side panel behavior
-  chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true });
+  // Popup handles icon click; side panel is opened on demand
+  // Guard for Firefox where sidePanel API doesn't exist (uses sidebarAction instead)
+  if (chrome.sidePanel && chrome.sidePanel.setPanelBehavior) {
+    chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: false });
+  }
 
-  // Handle extension icon click
-  chrome.action.onClicked.addListener(async (tab) => {
-    await chrome.sidePanel.open({ tabId: tab.id });
-  });
-
-  // Handle messages from content scripts and side panel
+  // Handle messages from content scripts, side panel, and popup
   chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     handleMessage(message, sender, sendResponse);
-    return true; // Keep channel open for async response
+    return true;
   });
 
   async function handleMessage(message, sender, sendResponse) {
     const tabId = sender.tab?.id || message.tabId;
 
     switch (message.type) {
+      // ── Pro/Payment ──
+      case 'GET_PRO_STATUS':
+        const proStatus = await getProStatus(message.forceRefresh);
+        sendResponse(proStatus);
+        break;
+
+      case 'OPEN_PAYMENT_PAGE':
+        extpay.openPaymentPage();
+        sendResponse({ success: true });
+        break;
+
+      case 'START_TRIAL':
+        extpay.openTrialPage('7-day');
+        sendResponse({ success: true });
+        break;
+
+      case 'OPEN_LOGIN_PAGE':
+        extpay.openLoginPage();
+        sendResponse({ success: true });
+        break;
+
+      // ── Blur State ──
       case 'GET_STATE':
         sendResponse(await getTabState(message.tabId));
         break;
@@ -66,16 +108,104 @@
         sendResponse({ success: true });
         break;
 
-      case 'BLUR_MODE_TOGGLED':
-        // Forward to side panel (broadcast)
-        forwardToSidePanel(message);
+      // ── Pro Features ──
+      case 'SET_BLUR_INTENSITY':
+        await setBlurIntensity(message.tabId, message.intensity);
         sendResponse({ success: true });
+        break;
+
+      case 'SET_BLUR_STYLE':
+        await setBlurStyle(message.tabId, message.style);
+        sendResponse({ success: true });
+        break;
+
+      case 'SAVE_DOMAIN_SETTINGS':
+        await saveDomainSettings(message.domain, message.settings);
+        sendResponse({ success: true });
+        break;
+
+      case 'GET_DOMAIN_SETTINGS':
+        const settings = await getDomainSettings(message.domain);
+        sendResponse({ settings });
+        break;
+
+      case 'SET_DOMAIN_LIST':
+        await setDomainList(message.listType, message.domains);
+        sendResponse({ success: true });
+        break;
+
+      case 'GET_DOMAIN_LIST':
+        const list = await getDomainList(message.listType);
+        sendResponse({ list });
+        break;
+
+      // ── UI ──
+      case 'BLUR_MODE_TOGGLED':
+        forwardToExtensionViews(message);
+        sendResponse({ success: true });
+        break;
+
+      case 'OPEN_SIDE_PANEL':
+        try {
+          if (chrome.sidePanel && chrome.sidePanel.open) {
+            await chrome.sidePanel.open({ windowId: message.windowId });
+          } else if (typeof browser !== 'undefined' && browser.sidebarAction) {
+            await browser.sidebarAction.open();
+          }
+          sendResponse({ success: true });
+        } catch (e) {
+          console.log('Could not open side panel:', e);
+          sendResponse({ success: false, error: e.message });
+        }
         break;
 
       default:
         sendResponse({ error: 'Unknown message type' });
     }
   }
+
+  // ── Pro Status ──
+
+  function buildProStatus(user) {
+    const now = Date.now();
+    const trialStarted = user.trialStartedAt ? new Date(user.trialStartedAt).getTime() : 0;
+    const trialActive = trialStarted > 0 && (now - trialStarted < 7 * 24 * 60 * 60 * 1000);
+
+    return {
+      isPro: user.paid || trialActive,
+      paid: user.paid,
+      trial: trialActive,
+      trialStartedAt: user.trialStartedAt,
+      trialDaysLeft: trialActive
+        ? Math.ceil((7 * 24 * 60 * 60 * 1000 - (now - trialStarted)) / (1000 * 60 * 60 * 24))
+        : 0,
+      subscriptionStatus: user.subscriptionStatus,
+      email: user.email
+    };
+  }
+
+  async function getProStatus(forceRefresh = false) {
+    const now = Date.now();
+    if (!forceRefresh && cachedProStatus && (now - proStatusLastChecked < PRO_STATUS_CACHE_MS)) {
+      return cachedProStatus;
+    }
+
+    try {
+      const user = await extpay.getUser();
+      cachedProStatus = buildProStatus(user);
+      proStatusLastChecked = now;
+      return cachedProStatus;
+    } catch (e) {
+      console.error('ContextBlur: Failed to get pro status', e);
+      return { isPro: false, paid: false, trial: false, trialDaysLeft: 0, subscriptionStatus: null, email: null };
+    }
+  }
+
+  function broadcastProStatus(status) {
+    chrome.runtime.sendMessage({ type: 'PRO_STATUS_UPDATED', status }).catch(() => {});
+  }
+
+  // ── Tab State ──
 
   async function getTabState(tabId) {
     const state = tabStates.get(tabId) || { blurModeEnabled: false, blurCount: 0, autoBlurEnabled: false };
@@ -89,11 +219,8 @@
     tabStates.set(tabId, state);
   }
 
-  function forwardToSidePanel(message) {
-    // Broadcast to all extension views (sidepanel will receive it)
-    chrome.runtime.sendMessage(message).catch(() => {
-      // No listeners, ignore
-    });
+  function forwardToExtensionViews(message) {
+    chrome.runtime.sendMessage(message).catch(() => {});
   }
 
   async function setBlurMode(tabId, enabled) {
@@ -101,14 +228,9 @@
     state.blurModeEnabled = enabled;
     tabStates.set(tabId, state);
 
-    // Notify content script
     try {
-      await chrome.tabs.sendMessage(tabId, {
-        type: 'BLUR_MODE_CHANGED',
-        enabled
-      });
+      await chrome.tabs.sendMessage(tabId, { type: 'BLUR_MODE_CHANGED', enabled });
     } catch (e) {
-      // Tab might not have content script loaded yet
       console.log('Could not send message to tab:', e);
     }
   }
@@ -118,6 +240,8 @@
     state.blurCount = count;
     tabStates.set(tabId, state);
   }
+
+  // ── Storage ──
 
   async function getStoredBlurs(url) {
     const key = `blurs_${normalizeUrl(url)}`;
@@ -138,14 +262,12 @@
     const key = `blurs_${normalizeUrl(url)}`;
     await chrome.storage.local.remove(key);
 
-    // Notify content script
     try {
       await chrome.tabs.sendMessage(tabId, { type: 'CLEAR_ALL_BLURS' });
     } catch (e) {
       console.log('Could not send clear message to tab:', e);
     }
 
-    // Update state
     const state = tabStates.get(tabId) || { blurModeEnabled: false, blurCount: 0 };
     state.blurCount = 0;
     tabStates.set(tabId, state);
@@ -165,15 +287,62 @@
     }
   }
 
-  // Clean up state when tabs are closed
+  // ── Pro Feature Storage ──
+
+  async function setBlurIntensity(tabId, intensity) {
+    const state = tabStates.get(tabId) || { blurModeEnabled: false, blurCount: 0 };
+    state.blurIntensity = intensity;
+    tabStates.set(tabId, state);
+
+    try {
+      await chrome.tabs.sendMessage(tabId, { type: 'SET_BLUR_INTENSITY', intensity });
+    } catch (e) {
+      console.log('Could not send intensity to tab:', e);
+    }
+  }
+
+  async function setBlurStyle(tabId, style) {
+    const state = tabStates.get(tabId) || { blurModeEnabled: false, blurCount: 0 };
+    state.blurStyle = style;
+    tabStates.set(tabId, state);
+
+    try {
+      await chrome.tabs.sendMessage(tabId, { type: 'SET_BLUR_STYLE', style });
+    } catch (e) {
+      console.log('Could not send style to tab:', e);
+    }
+  }
+
+  async function saveDomainSettings(domain, settings) {
+    const key = `domain_${domain}`;
+    await chrome.storage.local.set({ [key]: settings });
+  }
+
+  async function getDomainSettings(domain) {
+    const key = `domain_${domain}`;
+    const result = await chrome.storage.local.get(key);
+    return result[key] || null;
+  }
+
+  async function setDomainList(listType, domains) {
+    const key = `domainList_${listType}`;
+    await chrome.storage.local.set({ [key]: domains });
+  }
+
+  async function getDomainList(listType) {
+    const key = `domainList_${listType}`;
+    const result = await chrome.storage.local.get(key);
+    return result[key] || [];
+  }
+
+  // ── Lifecycle ──
+
   chrome.tabs.onRemoved.addListener((tabId) => {
     tabStates.delete(tabId);
   });
 
-  // Handle tab updates (navigation)
   chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     if (changeInfo.status === 'complete') {
-      // Reset blur mode on navigation
       const state = tabStates.get(tabId);
       if (state) {
         state.blurModeEnabled = false;
@@ -182,4 +351,3 @@
     }
   });
 })();
-

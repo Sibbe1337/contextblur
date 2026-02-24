@@ -1,0 +1,168 @@
+{
+  "name": "contextblur",
+  "displayName": "ContextBlur",
+  "description": "Blur sensitive data (PII, API keys, secrets) in your editor during screen sharing, pair programming, or live coding.",
+  "version": "1.0.0",
+  "publisher": "contextblur",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/contextblur/vscode-contextblur"
+  },
+  "icon": "icon.png",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "keywords": [
+    "blur",
+    "privacy",
+    "screen sharing",
+    "pii",
+    "secrets",
+    "api keys",
+    "redact",
+    "sensitive data"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "contextblur.toggle",
+        "title": "ContextBlur: Toggle Auto-Blur"
+      },
+      {
+        "command": "contextblur.blurSelection",
+        "title": "ContextBlur: Blur Selection"
+      },
+      {
+        "command": "contextblur.autoBlur",
+        "title": "ContextBlur: Run Auto-Blur Scan"
+      },
+      {
+        "command": "contextblur.clearAll",
+        "title": "ContextBlur: Clear All Blurs"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "contextblur.toggle",
+        "key": "ctrl+shift+b",
+        "mac": "cmd+shift+b"
+      },
+      {
+        "command": "contextblur.blurSelection",
+        "key": "ctrl+shift+h",
+        "mac": "cmd+shift+h",
+        "when": "editorHasSelection"
+      }
+    ],
+    "configuration": {
+      "title": "ContextBlur",
+      "properties": {
+        "contextblur.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable or disable ContextBlur extension."
+        },
+        "contextblur.style": {
+          "type": "string",
+          "default": "blackout",
+          "enum": [
+            "blackout",
+            "highlight",
+            "fade"
+          ],
+          "enumDescriptions": [
+            "Black box that hides text completely",
+            "Purple highlight with hidden text",
+            "Faded text (nearly invisible)"
+          ],
+          "description": "Visual style for blurred content."
+        },
+        "contextblur.patterns.email": {
+          "type": "boolean",
+          "default": true,
+          "description": "Detect and blur email addresses."
+        },
+        "contextblur.patterns.phone": {
+          "type": "boolean",
+          "default": true,
+          "description": "Detect and blur phone numbers."
+        },
+        "contextblur.patterns.ssn": {
+          "type": "boolean",
+          "default": true,
+          "description": "Detect and blur Social Security Numbers."
+        },
+        "contextblur.patterns.creditCard": {
+          "type": "boolean",
+          "default": true,
+          "description": "Detect and blur credit card numbers."
+        },
+        "contextblur.patterns.personnummer": {
+          "type": "boolean",
+          "default": true,
+          "description": "Detect and blur Swedish personal identity numbers."
+        },
+        "contextblur.patterns.apiKey": {
+          "type": "boolean",
+          "default": true,
+          "description": "Detect and blur generic API key-like strings."
+        },
+        "contextblur.patterns.awsKey": {
+          "type": "boolean",
+          "default": true,
+          "description": "Detect and blur AWS access key IDs."
+        },
+        "contextblur.patterns.jwt": {
+          "type": "boolean",
+          "default": true,
+          "description": "Detect and blur JWT tokens."
+        },
+        "contextblur.patterns.connectionString": {
+          "type": "boolean",
+          "default": true,
+          "description": "Detect and blur database connection strings."
+        },
+        "contextblur.patterns.privateKey": {
+          "type": "boolean",
+          "default": true,
+          "description": "Detect and blur private key blocks."
+        },
+        "contextblur.patterns.envValue": {
+          "type": "boolean",
+          "default": true,
+          "description": "Detect and blur values in .env files (KEY=value lines)."
+        },
+        "contextblur.excludeFiles": {
+          "type": "array",
+          "default": [
+            "*.min.js",
+            "*.lock",
+            "*.map"
+          ],
+          "items": {
+            "type": "string"
+          },
+          "description": "Glob patterns for files to skip during auto-blur."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "package": "vsce package"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.85.0",
+    "@types/node": "^20.0.0",
+    "typescript": "^5.3.0"
+  }
+}

@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How to Blur Tableau Dashboards During Screen Sharing: Protect Business Intelligence Data | ContextBlur</title>
+  <meta name="description" content="Tableau dashboards reveal revenue, customer data, and business metrics. Learn how to blur sensitive data points before screen sharing in presentations.">
+  <link rel="canonical" href="https://contextblur.app/blog/blur-tableau-screen-sharing.html">
+  <meta property="og:title" content="How to Blur Tableau Dashboards During Screen Sharing: Protect Business Intelligence Data">
+  <meta property="og:description" content="Tableau dashboards reveal revenue, customer data, and business metrics. Learn how to blur sensitive data points before screen sharing in presentations.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://contextblur.app/blog/blur-tableau-screen-sharing.html">
+  <meta property="og:site_name" content="ContextBlur">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="How to Blur Tableau Dashboards During Screen Sharing: Protect Business Intelligence Data">
+  <meta name="twitter:description" content="Tableau dashboards reveal revenue, customer data, and business metrics. Learn how to blur sensitive data points before screen sharing in presentations.">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "How to Blur Tableau Dashboards During Screen Sharing: Protect Business Intelligence Data",
+    "description": "Tableau dashboards reveal revenue, customer data, and business metrics. Learn how to blur sensitive data points before screen sharing in presentations.",
+    "datePublished": "2026-02-23",
+    "author": { "@type": "Organization", "name": "ContextBlur" },
+    "publisher": { "@type": "Organization", "name": "ContextBlur" }
+  }
+  </script>
+  <link rel="stylesheet" href="../blog.css">
+</head>
+<body>
+  <nav class="site-nav">
+    <div class="nav-inner">
+      <a href="/" class="nav-brand">
+        <div class="nav-logo">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+          </svg>
+        </div>
+        <span class="nav-brand-name">ContextBlur</span>
+      </a>
+      <div class="nav-links">
+        <a href="/">Home</a>
+        <a href="/blog">Blog</a>
+        <a href="/#pricing">Pricing</a>
+        <a href="/privacy.html">Privacy</a>
+        <a href="https://chromewebstore.google.com/detail/contextblur/epnjbbgfnlpkaggfpjebakbnnhpogmfh" class="nav-cta">Install</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="article-container">
+    <article class="article-card">
+      <header class="article-header">
+        <h1>How to Blur Tableau Dashboards During Screen Sharing: Protect Business Intelligence Data</h1>
+        <div class="article-meta">
+          <time datetime="2026-02-23">February 23, 2026</time>
+          <span class="meta-sep">&middot;</span>
+          <span>6 min read</span>
+        </div>
+        <div class="article-tags">
+          <span class="tag-badge">tableau</span>
+          <span class="tag-badge">dashboard</span>
+          <span class="tag-badge">screen sharing</span>
+          <span class="tag-badge">privacy</span>
+          <span class="tag-badge">business intelligence</span>
+        </div>
+      </header>
+
+      <div class="article-body">
+        <div class="tldr-box">
+          <p class="tldr-label">TL;DR</p>
+          <p>Before sharing your Tableau dashboard, blur revenue figures and financial KPIs, customer names in tables and chart labels, regional performance data restricted to certain teams, forecast models and projections, employee metrics, and sidebar filter values that reveal strategic criteria. ContextBlur lets you click each chart element, filter, or data table to hide it -- blurs persist across refreshes so your dashboard stays protected for the entire presentation.</p>
+        </div>
+
+        <hr>
+
+        <h2>Why Tableau Dashboards Are a Screen Sharing Risk</h2>
+
+        <p>Tableau is one of the most widely used data visualization platforms in enterprise environments. Analysts build dashboards that visualize revenue trends, customer behavior, regional performance, financial forecasts, and operational metrics. These dashboards are then shared -- in analyst reviews, executive meetings, client presentations, and cross-functional syncs -- through screen sharing.</p>
+
+        <p>The challenge is that Tableau dashboards are designed to communicate data clearly and immediately. Every chart, data table, and KPI card is optimized for readability. That same readability becomes a liability when you share your screen with an audience that should only see a subset of the data on display.</p>
+
+        <p>A single Tableau workbook view might show quarterly revenue by region, customer churn rates, average contract values, and a pipeline forecast -- all on one page. During a call with a client, a partner, or even an internal team with different access levels, most of that data should be hidden. This is a core <a href="/blog/screen-sharing-security-best-practices">screen sharing security</a> challenge for any organization that relies on Tableau for analytics.</p>
+
+        <h3>The Limits of Tableau's User Filters</h3>
+
+        <p>Tableau provides User Filter functionality that restricts which data a specific user can see when they access a published dashboard. This is conceptually similar to <a href="/blog/blur-power-bi-screen-sharing.html">Power BI's Row Level Security</a> -- it is an access control mechanism that filters data based on the viewer's identity.</p>
+
+        <p>User Filters are valuable for self-service analytics, where different users log into Tableau Server or Tableau Online and see only their authorized data. But they do not solve the screen sharing problem for the same reason RLS does not solve it in Power BI.</p>
+
+        <p>When you share your screen, everyone on the call sees your view. Your User Filter grants you broad access -- you are the analyst or manager who needs to see all the data. The audience on the other end of the screen share sees everything you see, regardless of what their own User Filter would show them if they logged in directly.</p>
+
+        <p>Tableau also does not offer any built-in "presentation mode" that lets you selectively mask data points while keeping the rest of the dashboard visible. You either show the full dashboard or you do not show it at all. For teams that need granular visual control during <a href="/blog/how-to-blur-screen-sharing">screen sharing sessions</a>, a purpose-built tool is the answer.</p>
+
+        <div class="cta-wrapper">
+          <a href="https://chromewebstore.google.com/detail/contextblur/epnjbbgfnlpkaggfpjebakbnnhpogmfh" class="cta-button" target="_blank" rel="noopener">
+            Install ContextBlur — Free
+          </a>
+        </div>
+
+        <h2>What to Blur in Tableau</h2>
+
+        <p>Before starting your screen share, review the Tableau dashboard for these elements:</p>
+
+        <ul>
+          <li><strong>Revenue figures and financial KPIs</strong> -- numbers in text tables, BANs (Big Awesome Numbers), and chart axis values</li>
+          <li><strong>Customer names in tables</strong> -- any crosstab or text table listing individual customers or accounts</li>
+          <li><strong>Customer names in chart marks</strong> -- bar charts, scatter plots, or maps with customer names as labels or tooltips</li>
+          <li><strong>Regional performance data</strong> -- if certain region data is restricted to specific teams, blur those regions' values</li>
+          <li><strong>Forecast and trend line values</strong> -- especially unreleased projections or budget numbers</li>
+          <li><strong>Employee metrics</strong> -- headcount, compensation data, or performance scores in HR dashboards</li>
+          <li><strong>Filter and parameter values</strong> -- quick filter selections and parameter controls that reveal strategic criteria</li>
+          <li><strong>Dashboard title and subtitles</strong> -- if they contain confidential project names or client references</li>
+          <li><strong>Worksheet tabs</strong> -- tab names like "Pipeline Forecast" or "Acquisition Targets" at the bottom of the workbook</li>
+          <li><strong>Tooltip content</strong> -- Tableau tooltips that appear on hover can contain detailed breakdowns (more on this below)</li>
+        </ul>
+
+        <p>The right blurring strategy depends entirely on the audience. A weekly team standup may need no blurring. A quarterly business review with external partners may require everything except the specific charts under discussion to be hidden.</p>
+
+        <h2>Step-by-Step: Blurring Tableau with ContextBlur</h2>
+
+        <p>These steps apply to Tableau Online and Tableau Server -- the web-based interfaces where dashboards are viewed in the browser. ContextBlur works with any web application, making it compatible with Tableau's browser-based views.</p>
+
+        <ol>
+          <li><strong>Open your Tableau dashboard.</strong> Navigate to the published view on Tableau Server or Tableau Online. Select the specific dashboard or story point you plan to present first.</li>
+          <li><strong>Activate ContextBlur.</strong> Press <code>Ctrl+Shift+B</code> (or <code>Cmd+Shift+B</code> on Mac) to enter blur mode. You can also click the ContextBlur extension icon in your Chrome toolbar. The cursor changes to indicate element selection mode.</li>
+          <li><strong>Blur KPI cards and BANs.</strong> Click on each large number display (Big Awesome Number) or summary card that shows a metric you want to hide. Revenue totals, profit margins, and customer counts are typically the first elements to blur.</li>
+          <li><strong>Blur chart axis values.</strong> For bar charts or line charts, click on the axis labels showing dollar amounts, percentages, or count values. This hides the scale while keeping the visual shape of the chart intact -- your audience can see the trend without knowing the exact numbers.</li>
+          <li><strong>Blur table contents.</strong> For text tables or crosstabs, click on specific cells, rows, or columns containing sensitive data. For large tables with customer names, consider clicking the entire table container to blur it all at once.</li>
+          <li><strong>Blur filter controls.</strong> Click on quick filter dropdowns, parameter controls, or slider values that reveal your filter criteria. A filter set to "Enterprise > $500K ARR" tells your audience both your segmentation approach and your threshold value.</li>
+          <li><strong>Blur worksheet tabs.</strong> If tab names at the bottom of the workbook are sensitive, click them to blur the text.</li>
+          <li><strong>Exit blur mode.</strong> Press <code>Ctrl+Shift+B</code> again to leave selection mode. All blurs are now locked in place and will persist if you refresh the page.</li>
+          <li><strong>Blur other dashboard pages.</strong> If your presentation spans multiple views or story points, navigate to each one and repeat the blurring process. ContextBlur remembers blurs per URL, so each view retains its own blur configuration.</li>
+          <li><strong>Verify and start your session.</strong> Scroll through each view, hover over charts to check for tooltip data, and confirm all sensitive elements are hidden. Then start your <a href="/blog/how-to-blur-screen-sharing">screen sharing session</a>.</li>
+        </ol>
+
+        <h3>Handling Tooltips During Live Presentations</h3>
+
+        <p>Tableau tooltips are a unique screen sharing risk. When you hover over a mark in a chart, Tableau displays a tooltip with detailed information -- often including the exact data values, customer names, and breakdown metrics that you blurred in the main view.</p>
+
+        <p>There are two approaches to managing tooltips during a blurred screen share. First, you can avoid hovering over chart elements entirely. Keep your cursor on neutral areas of the dashboard. This requires discipline during a live presentation.</p>
+
+        <p>Second, and more reliably, you can disable tooltips in Tableau Desktop before publishing the view. In the worksheet, go to Worksheet > Tooltip and uncheck "Show tooltips." This removes the hover behavior entirely for that view. If you cannot modify the published workbook, stick with the first approach and practice your cursor discipline before the call. Follow <a href="/blog/screen-sharing-checklist">screen sharing tips</a> to build this into your pre-presentation routine.</p>
+
+        <h2>Common Tableau Screen Sharing Scenarios</h2>
+
+        <h3>Analyst Reviews</h3>
+
+        <p>A data analyst presents findings to their team or manager. The focus is on methodology and insights, not raw numbers. Blur: specific revenue figures, customer names in detail tables, and any filter criteria that reveal confidential segmentation. Leave the chart shapes and trend lines visible to support the analytical narrative.</p>
+
+        <h3>Executive Presentations</h3>
+
+        <p>Presenting dashboard summaries to leadership. Executives may need to see high-level KPIs but not the granular data beneath them. Blur: customer-level detail tables, regional breakdowns restricted to specific teams, and forecast values that are not yet approved. Keep the summary KPIs visible (or blur selectively based on the meeting agenda).</p>
+
+        <h3>Client and Consultant Presentations</h3>
+
+        <p>Sharing analytics with external clients is the highest-risk scenario for <a href="/use-cases/consultants">consultants</a> and agencies. Other clients' data, internal pricing models, and proprietary methodologies must all be hidden. Blur: all customer names except the client you are presenting to, internal metrics, benchmark data from other engagements, and filter selections that reveal your analytical framework. Show only the specific insights that are deliverables for this client.</p>
+
+        <h3>Cross-Department Meetings</h3>
+
+        <p>The finance team presenting to marketing, or the sales team presenting to operations. Each department has different data access levels. Blur the metrics that fall outside the audience department's access -- compensation data when presenting to non-HR teams, detailed pipeline numbers when presenting to non-sales teams, and margin data when presenting to non-finance teams.</p>
+
+        <div class="cta-wrapper">
+          <a href="https://chromewebstore.google.com/detail/contextblur/epnjbbgfnlpkaggfpjebakbnnhpogmfh" class="cta-button" target="_blank" rel="noopener">
+            Install ContextBlur — Free
+          </a>
+        </div>
+
+        <h2>Auto-Detecting PII in Tableau with ContextBlur Pro</h2>
+
+        <p>Tableau dashboards focused on customer analytics, HR data, or transaction records can contain personal identifiers scattered throughout tables and chart labels. ContextBlur Pro ($1.50/mo or $15/yr) automatically detects and blurs:</p>
+
+        <ul>
+          <li><strong>Email addresses</strong> -- in customer detail tables, calculated field outputs, and data labels</li>
+          <li><strong>Phone numbers</strong> -- in contact-level tables and CRM-connected views</li>
+          <li><strong>Credit card numbers</strong> -- in transaction detail tables or payment analytics views</li>
+          <li><strong>SSN patterns</strong> -- in HR dashboards, compliance views, or benefits administration reports</li>
+        </ul>
+
+        <p>Auto-detect is especially valuable for Tableau because the same dashboard might show aggregated data in one view (safe to share) and customer-level detail in another (contains PII). As you navigate between views during a presentation, auto-detect continuously scans for new PII elements and blurs them without manual intervention.</p>
+
+        <p>For teams that also use <a href="/blog/blur-google-sheets-screen-sharing">spreadsheet tools</a> alongside Tableau, ContextBlur Pro provides a consistent privacy layer across all your data presentation tools -- from raw data in Google Sheets to polished visualizations in Tableau.</p>
+
+        <h2>Tips for Tableau Teams</h2>
+
+        <p><strong>Build a blurring checklist per dashboard.</strong> For dashboards that are shared regularly, document which elements to blur for each audience type. This saves time and reduces the risk of missing something. Integrate it with your broader <a href="/blog/screen-sharing-security-best-practices">screen sharing privacy</a> guidelines.</p>
+
+        <p><strong>Blur before the meeting starts.</strong> Take five minutes before the call to open each Tableau view, apply your blurs, and verify them. Blurring elements while the audience watches reveals that sensitive data was briefly visible and undermines confidence in your data handling.</p>
+
+        <p><strong>Disable tooltips for presentation workbooks.</strong> If you have a Tableau workbook used primarily for screen sharing presentations, disable tooltips in all worksheets. This eliminates the risk of hovering over a chart mark and revealing blurred data in the tooltip popup.</p>
+
+        <p><strong>Practice the presentation flow.</strong> Walk through your entire presentation path -- every click, every view switch, every filter change -- and verify that blurs hold up at each step. Interactive dashboards can reveal unexpected data when filters are changed or charts are cross-filtered.</p>
+
+        <p><strong>Consider view-level design.</strong> When building dashboards intended for screen sharing, consider creating a "presentation view" that shows only aggregated data, separate from the detail view used for internal analysis. Use ContextBlur on top of this presentation view for additional protection.</p>
+
+        <hr>
+
+        <h2>Present Tableau Dashboards Without Exposing Confidential Metrics</h2>
+
+        <p>Tableau is built to make data accessible, interactive, and easy to read. Those same qualities make it risky during screen sharing -- every chart, table, and KPI is designed to be understood at a glance by anyone watching your screen.</p>
+
+        <p>ContextBlur puts you in control of what your audience sees. Blur specific data points, chart values, table rows, and filter selections without modifying the published workbook. Set up your blurs before the meeting, let them persist across navigation, and present with confidence that your organization's sensitive data stays private.</p>
+
+        <div class="cta-wrapper">
+          <a href="https://chromewebstore.google.com/detail/contextblur/epnjbbgfnlpkaggfpjebakbnnhpogmfh" class="cta-button" target="_blank" rel="noopener">
+            Install ContextBlur — Free
+          </a>
+        </div>
+      </div>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-links">
+        <a href="/">Home</a>
+        <a href="/blog">Blog</a>
+        <a href="/privacy.html">Privacy</a>
+        <a href="https://chromewebstore.google.com/detail/contextblur/epnjbbgfnlpkaggfpjebakbnnhpogmfh">Chrome Web Store</a>
+      </div>
+      <p class="footer-copy">&copy; 2026 ContextBlur. All rights reserved.</p>
+      <span class="footer-badge">100% Local — Zero Data Transmitted</span>
+    </div>
+  </footer>
+</body>
+</html>

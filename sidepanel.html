@@ -13,7 +13,7 @@
       <div class="header">
         <div class="header-left">
           <div class="logo-icon">
-            <svg class="logo-svg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="logo-svg" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
             </svg>
@@ -23,8 +23,25 @@
             <p class="subtitle">Privacy on demand</p>
           </div>
         </div>
-        <div class="version">v1.0</div>
+        <div class="header-right">
+          <span id="proBadge" class="tier-badge badge-free">FREE</span>
+          <div class="version">v2.0.0</div>
+        </div>
       </div>
+    </div>
+
+    <!-- Upgrade Card (shown for free users) -->
+    <div id="upgradeCard" class="glass-panel upgrade-card hidden">
+      <h3 class="upgrade-title">Unlock ContextBlur Pro</h3>
+      <p class="upgrade-description">Custom blur intensity, multiple styles, auto-blur detection, and more.</p>
+      <div class="upgrade-pricing">
+        <span class="price">$1.50/mo</span>
+        <span class="price-divider">or</span>
+        <span class="price">$15/yr</span>
+      </div>
+      <button id="startTrialBtn" class="btn-primary upgrade-btn">Start 7-Day Free Trial</button>
+      <button id="upgradeBtn" class="btn-secondary" style="margin-top: 8px;">Subscribe Now</button>
+      <button id="loginBtn" class="login-link">Already subscribed? Log in</button>
     </div>
 
     <!-- Main Control -->
@@ -32,7 +49,7 @@
       <div class="control-row">
         <div class="control-left">
           <div class="control-icon">
-            <svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
             </svg>
           </div>
@@ -41,9 +58,9 @@
             <p class="control-subtitle" id="modeStatus">Click elements to blur</p>
           </div>
         </div>
-        
+
         <label class="toggle-label">
-          <input type="checkbox" id="blurModeToggle" class="toggle-input">
+          <input type="checkbox" id="blurModeToggle" class="toggle-input" aria-label="Toggle blur mode">
           <div class="toggle-track">
             <div class="toggle-thumb"></div>
           </div>
@@ -62,18 +79,18 @@
     <div class="glass-panel">
       <div class="stats-header">
         <h3 class="stats-title">Blurred Elements</h3>
-        <div id="blurCount" class="count-badge">0</div>
+        <div id="blurCount" class="count-badge" aria-live="polite" aria-atomic="true">0</div>
       </div>
-      
+
       <div class="button-row">
-        <button id="clearAllBtn" class="btn-secondary" disabled>
+        <button id="clearAllBtn" class="btn-secondary" disabled aria-label="Clear all blurs on this page">
           Clear All
         </button>
         <button id="confirmClearBtn" class="btn-danger hidden">
           Confirm Clear?
         </button>
       </div>
-      
+
       <p id="emptyState" class="state-text">
         No elements blurred on this page
       </p>
@@ -82,57 +99,142 @@
       </p>
     </div>
 
-    <!-- Auto-blur Feature (Optional) -->
+    <!-- Blur Intensity (Pro) -->
     <div class="glass-panel feature-card">
       <div class="feature-content">
         <div class="feature-icon">
-          <svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
+          </svg>
+        </div>
+        <div class="feature-text">
+          <div class="feature-header">
+            <h3 class="feature-title">Blur Intensity</h3>
+            <span class="pro-badge">PRO</span>
+          </div>
+          <p class="feature-description">Adjust how strong the blur effect is.</p>
+        </div>
+      </div>
+      <div id="intensityControls" class="pro-controls hidden">
+        <input type="range" id="blurIntensity" min="1" max="20" value="8" class="intensity-slider">
+        <div class="intensity-labels">
+          <span>Light</span>
+          <span id="intensityValue">8px</span>
+          <span>Heavy</span>
+        </div>
+      </div>
+      <div id="intensityLocked" class="locked-overlay">
+        <svg class="lock-icon-inline" fill="none" stroke="currentColor" viewBox="0 0 24 24" width="16" height="16">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+          <path d="M7 11V7a5 5 0 0110 0v4"/>
+        </svg>
+        <span class="lock-message">Upgrade to Pro to customize</span>
+      </div>
+    </div>
+
+    <!-- Blur Styles (Pro) -->
+    <div class="glass-panel feature-card">
+      <div class="feature-content">
+        <div class="feature-icon">
+          <svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"/>
+          </svg>
+        </div>
+        <div class="feature-text">
+          <div class="feature-header">
+            <h3 class="feature-title">Blur Styles</h3>
+            <span class="pro-badge">PRO</span>
+          </div>
+        </div>
+      </div>
+      <div id="styleControls" class="pro-controls">
+        <div class="style-grid">
+          <button class="style-option active" data-style="blur">
+            <div class="style-preview blur-preview"></div>
+            <span>Blur</span>
+          </button>
+          <button class="style-option" data-style="pixelate">
+            <div class="style-preview pixelate-preview"></div>
+            <span>Pixelate</span>
+          </button>
+          <button class="style-option" data-style="blackout">
+            <div class="style-preview blackout-preview"></div>
+            <span>Blackout</span>
+          </button>
+          <button class="style-option" data-style="fade">
+            <div class="style-preview fade-preview"></div>
+            <span>Fade</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Auto-blur Feature (Pro) -->
+    <div class="glass-panel feature-card">
+      <div class="feature-content">
+        <div class="feature-icon">
+          <svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
           </svg>
         </div>
         <div class="feature-text">
           <div class="feature-header">
-            <h3 class="feature-title">Auto-blur (optional)</h3>
-            <span class="optional-badge">Optional</span>
+            <h3 class="feature-title">Auto-blur</h3>
+            <span id="autoBlurProBadge" class="pro-badge">PRO</span>
           </div>
           <p class="feature-description">
-            Scan visible text on this page to find and blur emails, phone numbers, SSNs, and credit cards.
+            Scan visible text to find and blur emails, phone numbers, SSNs, and credit cards.
           </p>
         </div>
       </div>
 
-      <!-- Type Selection -->
       <div class="autoblur-options">
         <label class="checkbox-label">
           <input type="checkbox" id="blurEmails" checked>
-          <span class="checkbox-text">📧 Emails</span>
+          <span class="checkbox-text">Emails</span>
         </label>
         <label class="checkbox-label">
           <input type="checkbox" id="blurPhones" checked>
-          <span class="checkbox-text">📱 Phone numbers</span>
+          <span class="checkbox-text">Phone numbers</span>
         </label>
         <label class="checkbox-label">
           <input type="checkbox" id="blurCards" checked>
-          <span class="checkbox-text">💳 Credit cards</span>
+          <span class="checkbox-text">Credit cards</span>
         </label>
         <label class="checkbox-label">
           <input type="checkbox" id="blurSSN" checked>
-          <span class="checkbox-text">🔐 SSN / Personnummer</span>
+          <span class="checkbox-text">SSN / Personnummer</span>
         </label>
       </div>
 
-      <!-- Run Button -->
-      <button id="runAutoBlurBtn" class="btn-primary">
+      <button id="runAutoBlurBtn" class="btn-primary" aria-label="Run auto-blur to detect sensitive data">
         Run auto-blur now
       </button>
-      
-      <!-- Result -->
+
       <p id="autoBlurResult" class="autoblur-result hidden"></p>
 
-      <!-- Disclosure notice -->
       <p class="disclosure-text">
-        When you run auto-blur, ContextBlur scans visible text on this page locally. No data is sent anywhere.
+        Scans visible text on this page locally. No data is sent anywhere.
       </p>
+    </div>
+
+    <!-- Blur Scheduling (Coming Soon) -->
+    <div class="glass-panel feature-card coming-soon-card">
+      <div class="feature-content">
+        <div class="feature-icon">
+          <svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+        </div>
+        <div class="feature-text">
+          <div class="feature-header">
+            <h3 class="feature-title">Blur Scheduling</h3>
+            <span class="pro-badge">PRO</span>
+            <span class="coming-soon-badge">Coming Soon</span>
+          </div>
+          <p class="feature-description">Auto-enable blur during calendar events and meetings.</p>
+        </div>
+      </div>
     </div>
 
     <!-- Keyboard Shortcuts -->
@@ -152,7 +254,7 @@
 
     <!-- Tips -->
     <div class="glass-panel tip-card">
-      <svg class="tip-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg class="tip-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
       </svg>
       <div>
@@ -165,19 +267,19 @@
     <!-- Footer -->
     <div class="footer">
       <p class="footer-text">
-        100% Local Processing • No Data Transmitted • No Analytics
+        100% Local Processing &bull; No Data Transmitted
       </p>
     </div>
   </div>
 
   <!-- Disclosure Modal -->
-  <div id="disclosureModal" class="modal-overlay hidden">
+  <div id="disclosureModal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
     <div class="modal-content">
       <div class="modal-header">
-        <svg class="modal-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg class="modal-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
         </svg>
-        <h2 class="modal-title">Auto-blur Privacy Notice</h2>
+        <h2 class="modal-title" id="modalTitle">Auto-blur Privacy Notice</h2>
       </div>
       <div class="modal-body">
         <p>When you use auto-blur, ContextBlur will:</p>
@@ -198,6 +300,8 @@
     </div>
   </div>
 
+  <script src="pro-features.js"></script>
+  <script src="analytics.js"></script>
   <script src="sidepanel.js"></script>
 </body>
 </html>

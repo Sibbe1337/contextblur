@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "ContextBlur",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Click elements to blur them. Optional auto-blur scans visible page text locally when you run it. No data transmitted.",
   "permissions": [
     "storage",
@@ -12,8 +12,7 @@
     "https://*/*"
   ],
   "background": {
-    "service_worker": "background.js",
-    "type": "module"
+    "service_worker": "background.js"
   },
   "content_scripts": [
     {
@@ -27,7 +26,8 @@
     "default_path": "sidepanel.html"
   },
   "action": {
-    "default_title": "Open ContextBlur",
+    "default_title": "ContextBlur - Click to blur elements",
+    "default_popup": "popup.html",
     "default_icon": {
       "16": "icons/icon16.png",
       "32": "icons/icon32.png",
@@ -40,5 +40,8 @@
     "32": "icons/icon32.png",
     "48": "icons/icon48.png",
     "128": "icons/icon128.png"
+  },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'; connect-src 'self' https://extensionpay.com"
   }
 }

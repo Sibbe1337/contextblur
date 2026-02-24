@@ -14,11 +14,13 @@
   const BLUR_CLASS = 'contextblur-blurred';
   const AUTO_BLUR_CLASS = 'contextblur-auto-blurred';
   let blurCounter = 0;
+  let currentBlurIntensity = 8;
+  let currentBlurStyle = 'blur';
 
   // Sensitive data patterns
   const SENSITIVE_PATTERNS = {
     email: /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/g,
-    phone: /(?:\+?(\d{1,3}))?[-.\s]?\(?\d{1,4}\)?[-.\s]?\d{1,4}[-.\s]?\d{1,9}/g,
+    phone: /(?:\+\d{1,3}[-.\s]?)?\(?\d{2,4}\)?[-.\s]?\d{3,4}[-.\s]?\d{3,4}\b/g,
     ssn: /\b\d{3}[-.\s]?\d{2}[-.\s]?\d{4}\b/g,
     creditCard: /\b(?:\d{4}[-.\s]?){3}\d{4}\b/g,
     personnummer: /\b\d{6,8}[-.\s]?\d{4}\b/g
@@ -101,13 +103,42 @@
       case 'GET_BLUR_COUNT':
         sendResponse({ count: blurredElements.size });
         break;
+
+      case 'SET_BLUR_INTENSITY':
+        currentBlurIntensity = message.intensity;
+        updateAllBlurredElements();
+        sendResponse({ success: true });
+        break;
+
+      case 'SET_BLUR_STYLE':
+        currentBlurStyle = message.style;
+        updateAllBlurredElements();
+        sendResponse({ success: true });
+        break;
     }
     return true;
   }
 
+  let _bodyReadyListenerAdded = false;
+
   function setBlurMode(enabled) {
     blurModeEnabled = enabled;
 
+    if (!document.body) {
+      if (!_bodyReadyListenerAdded) {
+        _bodyReadyListenerAdded = true;
+        document.addEventListener('DOMContentLoaded', () => {
+          applyBlurModeToDOM(blurModeEnabled);
+        }, { once: true });
+      }
+      return;
+    }
+
+    applyBlurModeToDOM(enabled);
+  }
+
+  function applyBlurModeToDOM(enabled) {
+    if (!document.body) return;
     if (enabled) {
       document.body.style.setProperty('cursor', `url("${CURSOR_DATA_URL}") 16 16, crosshair`, 'important');
       document.body.classList.add('contextblur-active');
@@ -172,18 +203,14 @@
         if (!pattern) continue;
 
         pattern.lastIndex = 0;
-
-        if (pattern.test(text)) {
-          pattern.lastIndex = 0;
-          let match;
-          while ((match = pattern.exec(text)) !== null) {
-            nodesToWrap.push({
-              node,
-              match: match[0],
-              index: match.index,
-              type
-            });
-          }
+        let match;
+        while ((match = pattern.exec(text)) !== null) {
+          nodesToWrap.push({
+            node,
+            match: match[0],
+            index: match.index,
+            type
+          });
         }
       }
     }
@@ -356,11 +383,56 @@
   }
 
   function applyBlurStyles(element) {
-    element.style.setProperty('filter', 'blur(8px)', 'important');
-    element.style.setProperty('-webkit-filter', 'blur(8px)', 'important');
+    clearBlurStyleProperties(element);
+
+    switch (currentBlurStyle) {
+      case 'pixelate':
+        element.style.setProperty('filter', `blur(${Math.max(1, currentBlurIntensity / 4)}px)`, 'important');
+        element.style.setProperty('-webkit-filter', `blur(${Math.max(1, currentBlurIntensity / 4)}px)`, 'important');
+        element.style.setProperty('image-rendering', 'pixelated', 'important');
+        element.style.setProperty('transform', `scale(${1 + currentBlurIntensity / 40})`, 'important');
+        element.style.setProperty('overflow', 'hidden', 'important');
+        break;
+
+      case 'blackout':
+        element.style.setProperty('background-color', '#1a1a2e', 'important');
+        element.style.setProperty('color', 'transparent', 'important');
+        element.style.setProperty('text-shadow', 'none', 'important');
+        element.style.setProperty('border-radius', '4px', 'important');
+        break;
+
+      case 'fade':
+        element.style.setProperty('opacity', `${Math.max(0.02, 1 - currentBlurIntensity / 10)}`, 'important');
+        break;
+
+      case 'blur':
+      default:
+        element.style.setProperty('filter', `blur(${currentBlurIntensity}px)`, 'important');
+        element.style.setProperty('-webkit-filter', `blur(${currentBlurIntensity}px)`, 'important');
+        break;
+    }
+
     element.style.setProperty('user-select', 'none', 'important');
     element.style.setProperty('-webkit-user-select', 'none', 'important');
     element.style.setProperty('pointer-events', 'none', 'important');
+  }
+
+  function clearBlurStyleProperties(element) {
+    element.style.removeProperty('filter');
+    element.style.removeProperty('-webkit-filter');
+    element.style.removeProperty('image-rendering');
+    element.style.removeProperty('transform');
+    element.style.removeProperty('overflow');
+    element.style.removeProperty('background-color');
+    element.style.removeProperty('color');
+    element.style.removeProperty('text-shadow');
+    element.style.removeProperty('border-radius');
+    element.style.removeProperty('opacity');
+  }
+
+  function updateAllBlurredElements() {
+    const blurred = document.querySelectorAll(`.${BLUR_CLASS}, .${AUTO_BLUR_CLASS}`);
+    blurred.forEach(el => applyBlurStyles(el));
   }
 
   function removeBlur(element) {
@@ -372,8 +444,7 @@
     element.removeAttribute(BLUR_ATTRIBUTE);
     element.classList.remove(BLUR_CLASS);
     element.classList.remove(AUTO_BLUR_CLASS);
-    element.style.removeProperty('filter');
-    element.style.removeProperty('-webkit-filter');
+    clearBlurStyleProperties(element);
     element.style.removeProperty('user-select');
     element.style.removeProperty('-webkit-user-select');
     element.style.removeProperty('pointer-events');
@@ -491,5 +562,236 @@
     }).catch(() => {
       // Extension context might be invalid, ignore
     });
+  }
+
+  // ── Public API bridge ──────────────────────────────────────────────
+  // Exposes ContextBlur controls so external tools (Claude AI, MCP
+  // servers, browser automation) can interact programmatically.
+  //
+  // Two access methods:
+  //
+  // 1. Content script world (direct):
+  //    window.__contextblur.enableBlurMode()
+  //
+  // 2. Main/page world (via CustomEvent bridge):
+  //    document.dispatchEvent(new CustomEvent('contextblur:command', {
+  //      detail: { action: 'enableBlurMode', id: '123' }
+  //    }));
+  //    document.addEventListener('contextblur:response', (e) => {
+  //      console.log(e.detail); // { id: '123', result: {...} }
+  //    });
+  //
+  // Security: All operations are local-only. No data is transmitted.
+  // The API mirrors what the user can already do via the UI.
+
+  // ── Action handlers (shared by both access methods) ──
+
+  const apiHandlers = {
+    // State
+    getStatus: () => ({
+      blurModeEnabled,
+      blurCount: blurredElements.size,
+      blurredIds: [...blurredElements],
+      supportedPatterns: Object.keys(SENSITIVE_PATTERNS),
+      version: '1.0.0'
+    }),
+
+    // Blur mode
+    enableBlurMode: () => {
+      setBlurMode(true);
+      notifyBlurModeChange(true);
+      return { success: true, enabled: true };
+    },
+
+    disableBlurMode: () => {
+      setBlurMode(false);
+      notifyBlurModeChange(false);
+      return { success: true, enabled: false };
+    },
+
+    toggleBlurMode: () => {
+      const newState = !blurModeEnabled;
+      setBlurMode(newState);
+      notifyBlurModeChange(newState);
+      return { success: true, enabled: newState };
+    },
+
+    // Element blurring
+    blurSelector: ({ selector }) => {
+      try {
+        const el = document.querySelector(selector);
+        if (!el) return { success: false, error: 'Element not found' };
+        if (el.classList.contains(BLUR_CLASS)) return { success: true, alreadyBlurred: true };
+        applyBlur(el);
+        return { success: true, selector };
+      } catch (e) {
+        return { success: false, error: e.message };
+      }
+    },
+
+    blurAll: ({ selector }) => {
+      try {
+        const els = document.querySelectorAll(selector);
+        let count = 0;
+        els.forEach(el => {
+          if (!el.classList.contains(BLUR_CLASS)) {
+            applyBlur(el);
+            count++;
+          }
+        });
+        return { success: true, blurredCount: count };
+      } catch (e) {
+        return { success: false, error: e.message };
+      }
+    },
+
+    unblurSelector: ({ selector }) => {
+      try {
+        const el = document.querySelector(selector);
+        if (!el) return { success: false, error: 'Element not found' };
+        removeBlur(el);
+        return { success: true };
+      } catch (e) {
+        return { success: false, error: e.message };
+      }
+    },
+
+    clearAll: () => {
+      clearAllBlurs();
+      return { success: true };
+    },
+
+    // Auto-blur
+    runAutoBlur: ({ types } = {}) => {
+      const validTypes = types || ['email', 'phone', 'ssn', 'creditCard'];
+      const result = runAutoBlurOnce(validTypes);
+      return { success: true, blurredCount: result.count };
+    }
+  };
+
+  // ── Method 1: Direct API on window (content script world) ──
+
+  const publicAPI = Object.freeze({
+    isBlurModeEnabled: () => blurModeEnabled,
+    getBlurCount: () => blurredElements.size,
+    getBlurredIds: () => [...blurredElements],
+    getSupportedPatterns: () => Object.keys(SENSITIVE_PATTERNS),
+    enableBlurMode: () => apiHandlers.enableBlurMode(),
+    disableBlurMode: () => apiHandlers.disableBlurMode(),
+    toggleBlurMode: () => apiHandlers.toggleBlurMode(),
+    blurSelector: (selector) => apiHandlers.blurSelector({ selector }),
+    blurAll: (selector) => apiHandlers.blurAll({ selector }),
+    unblurSelector: (selector) => apiHandlers.unblurSelector({ selector }),
+    clearAll: () => apiHandlers.clearAll(),
+    runAutoBlur: (types) => apiHandlers.runAutoBlur({ types }),
+    getStatus: () => apiHandlers.getStatus(),
+    version: '1.0.0',
+    name: 'ContextBlur'
+  });
+
+  try {
+    Object.defineProperty(window, '__contextblur', {
+      value: publicAPI,
+      writable: false,
+      configurable: false,
+      enumerable: true
+    });
+  } catch (e) {
+    window.__contextblur = publicAPI;
+  }
+
+  // ── Method 2: CustomEvent bridge (main/page world) ──
+  // Allows code running in the page context (e.g., Claude in Chrome,
+  // Puppeteer, Playwright) to control ContextBlur via DOM events.
+
+  document.addEventListener('contextblur:command', (event) => {
+    const { action, id, ...params } = event.detail || {};
+
+    if (!action || !apiHandlers[action]) {
+      document.dispatchEvent(new CustomEvent('contextblur:response', {
+        detail: { id, error: `Unknown action: ${action}` }
+      }));
+      return;
+    }
+
+    try {
+      const result = apiHandlers[action](params);
+      document.dispatchEvent(new CustomEvent('contextblur:response', {
+        detail: { id, result }
+      }));
+    } catch (e) {
+      document.dispatchEvent(new CustomEvent('contextblur:response', {
+        detail: { id, error: e.message }
+      }));
+    }
+  });
+
+  // ── Method 3: Inject lightweight proxy into main world ──
+  // Injects a thin wrapper on window.__contextblur in the PAGE context
+  // that forwards calls through the CustomEvent bridge above.
+
+  const bridgeScript = document.createElement('script');
+  bridgeScript.textContent = `
+    (function() {
+      if (window.__contextblur) return; // Already defined
+
+      let _callId = 0;
+      const _pending = new Map();
+
+      document.addEventListener('contextblur:response', function(e) {
+        var d = e.detail || {};
+        if (d.id && _pending.has(d.id)) {
+          _pending.get(d.id)(d.error ? d : d.result);
+          _pending.delete(d.id);
+        }
+      });
+
+      function call(action, params) {
+        return new Promise(function(resolve) {
+          var id = 'cb_' + (++_callId);
+          _pending.set(id, resolve);
+          document.dispatchEvent(new CustomEvent('contextblur:command', {
+            detail: Object.assign({ action: action, id: id }, params || {})
+          }));
+          // Timeout fallback
+          setTimeout(function() {
+            if (_pending.has(id)) {
+              _pending.delete(id);
+              resolve({ error: 'Timeout' });
+            }
+          }, 3000);
+        });
+      }
+
+      Object.defineProperty(window, '__contextblur', {
+        value: Object.freeze({
+          getStatus:        function() { return call('getStatus'); },
+          enableBlurMode:   function() { return call('enableBlurMode'); },
+          disableBlurMode:  function() { return call('disableBlurMode'); },
+          toggleBlurMode:   function() { return call('toggleBlurMode'); },
+          blurSelector:     function(s) { return call('blurSelector', { selector: s }); },
+          blurAll:          function(s) { return call('blurAll', { selector: s }); },
+          unblurSelector:   function(s) { return call('unblurSelector', { selector: s }); },
+          clearAll:         function() { return call('clearAll'); },
+          runAutoBlur:      function(t) { return call('runAutoBlur', { types: t }); },
+          version: '1.0.0',
+          name: 'ContextBlur'
+        }),
+        writable: false,
+        configurable: false,
+        enumerable: true
+      });
+    })();
+  `;
+
+  // Inject at document_start or as soon as possible
+  if (document.documentElement) {
+    document.documentElement.appendChild(bridgeScript);
+    bridgeScript.remove();
+  } else {
+    document.addEventListener('DOMContentLoaded', () => {
+      document.documentElement.appendChild(bridgeScript);
+      bridgeScript.remove();
+    }, { once: true });
   }
 })();

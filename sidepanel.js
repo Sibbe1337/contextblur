@@ -1,6 +1,6 @@
 /**
  * ContextBlur - Side Panel Controller
- * Manages UI state and communication with content scripts
+ * Manages UI state, Pro features, and communication with content scripts
  */
 
 (() => {
@@ -16,17 +16,29 @@
     confirmClearBtn: document.getElementById('confirmClearBtn'),
     emptyState: document.getElementById('emptyState'),
     hasBlursState: document.getElementById('hasBlursState'),
-    // Auto-blur elements
+    // Auto-blur
     runAutoBlurBtn: document.getElementById('runAutoBlurBtn'),
     autoBlurResult: document.getElementById('autoBlurResult'),
     blurEmails: document.getElementById('blurEmails'),
     blurPhones: document.getElementById('blurPhones'),
     blurCards: document.getElementById('blurCards'),
     blurSSN: document.getElementById('blurSSN'),
-    // Modal elements
+    // Modal
     disclosureModal: document.getElementById('disclosureModal'),
     modalCancelBtn: document.getElementById('modalCancelBtn'),
-    modalAcceptBtn: document.getElementById('modalAcceptBtn')
+    modalAcceptBtn: document.getElementById('modalAcceptBtn'),
+    // Pro
+    proBadge: document.getElementById('proBadge'),
+    upgradeCard: document.getElementById('upgradeCard'),
+    startTrialBtn: document.getElementById('startTrialBtn'),
+    upgradeBtn: document.getElementById('upgradeBtn'),
+    loginBtn: document.getElementById('loginBtn'),
+    autoBlurProBadge: document.getElementById('autoBlurProBadge'),
+    intensityControls: document.getElementById('intensityControls'),
+    intensityLocked: document.getElementById('intensityLocked'),
+    blurIntensity: document.getElementById('blurIntensity'),
+    intensityValue: document.getElementById('intensityValue'),
+    styleControls: document.getElementById('styleControls')
   };
 
   // State
@@ -36,16 +48,75 @@
   let disclosureAccepted = false;
   let pendingAutoBlurRun = false;
 
-  // Initialize
   init();
 
   async function init() {
     await getCurrentTab();
     await loadState();
     await checkDisclosureStatus();
+    await initProStatus();
     setupEventListeners();
-    startPolling();
+    ContextBlurAnalytics.trackSession();
   }
+
+  // ── Pro Status ──
+
+  async function initProStatus() {
+    const status = await ContextBlurPro.checkStatus();
+    updateProUI(status);
+
+    ContextBlurPro.onStatusChange((newStatus) => {
+      updateProUI(newStatus);
+    });
+  }
+
+  function updateProUI(status) {
+    // Badge
+    elements.proBadge.textContent = ContextBlurPro.getTrialBadgeText();
+    elements.proBadge.className = `tier-badge ${ContextBlurPro.getBadgeClass()}`;
+
+    // Upgrade card
+    if (status.isPro) {
+      elements.upgradeCard.classList.add('hidden');
+    } else {
+      elements.upgradeCard.classList.remove('hidden');
+    }
+
+    // Auto-blur gating
+    if (status.isPro) {
+      elements.runAutoBlurBtn.disabled = false;
+      elements.runAutoBlurBtn.textContent = 'Run auto-blur now';
+      elements.autoBlurProBadge.classList.add('hidden');
+    } else {
+      elements.runAutoBlurBtn.disabled = true;
+      elements.runAutoBlurBtn.textContent = 'Upgrade to Pro';
+      elements.autoBlurProBadge.classList.remove('hidden');
+    }
+
+    // Intensity slider gating
+    if (status.isPro) {
+      elements.intensityControls.classList.remove('hidden');
+      elements.intensityLocked.classList.add('hidden');
+    } else {
+      elements.intensityControls.classList.add('hidden');
+      elements.intensityLocked.classList.remove('hidden');
+    }
+
+    // Style buttons gating
+    document.querySelectorAll('.style-option').forEach(btn => {
+      if (btn.dataset.style !== 'blur') {
+        if (status.isPro) {
+          btn.disabled = false;
+          btn.classList.remove('locked');
+        } else {
+          btn.disabled = true;
+          btn.classList.add('locked');
+        }
+      }
+    });
+  }
+
+  // ── Tab & State ──
 
   async function getCurrentTab() {
     const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
@@ -84,42 +155,95 @@
     }
   }
 
-  function setupEventListeners() {
-    // Blur mode toggle
-    elements.blurModeToggle.addEventListener('change', handleToggleChange);
+  // ── Event Listeners ──
 
-    // Clear all button
+  function setupEventListeners() {
+    elements.blurModeToggle.addEventListener('change', handleToggleChange);
     elements.clearAllBtn.addEventListener('click', handleClearClick);
     elements.confirmClearBtn.addEventListener('click', handleConfirmClear);
-
-    // Auto-blur run button
     elements.runAutoBlurBtn.addEventListener('click', handleRunAutoBlur);
-
-    // Modal buttons
     elements.modalCancelBtn.addEventListener('click', handleModalCancel);
     elements.modalAcceptBtn.addEventListener('click', handleModalAccept);
 
-    // Close modal on overlay click
     elements.disclosureModal.addEventListener('click', (e) => {
-      if (e.target === elements.disclosureModal) {
-        handleModalCancel();
-      }
+      if (e.target === elements.disclosureModal) handleModalCancel();
     });
 
-    // Listen for tab changes
+    // Pro buttons
+    elements.startTrialBtn.addEventListener('click', () => {
+      ContextBlurAnalytics.track(ContextBlurAnalytics.EVENTS.TRIAL_START_CLICK);
+      ContextBlurPro.startTrial();
+    });
+
+    elements.upgradeBtn.addEventListener('click', () => {
+      ContextBlurAnalytics.track(ContextBlurAnalytics.EVENTS.PRO_UPGRADE_CLICK);
+      ContextBlurPro.openUpgrade();
+    });
+
+    elements.loginBtn.addEventListener('click', () => {
+      ContextBlurPro.openLogin();
+    });
+
+    // Blur intensity slider
+    elements.blurIntensity.addEventListener('input', handleIntensityChange);
+
+    // Blur style buttons
+    document.querySelectorAll('.style-option').forEach(btn => {
+      btn.addEventListener('click', () => handleStyleChange(btn));
+    });
+
+    // Tab changes
     chrome.tabs.onActivated.addListener(handleTabChange);
     chrome.tabs.onUpdated.addListener(handleTabUpdate);
 
-    // Listen for messages
+    // Messages
     chrome.runtime.onMessage.addListener(handleMessage);
   }
+
+  // ── Pro Feature Handlers ──
+
+  async function handleIntensityChange(e) {
+    if (!ContextBlurPro.isPro()) return;
+    const intensity = parseInt(e.target.value);
+    elements.intensityValue.textContent = `${intensity}px`;
+
+    ContextBlurAnalytics.track(ContextBlurAnalytics.EVENTS.INTENSITY_CHANGED, { intensity });
+
+    if (currentTabId) {
+      await chrome.runtime.sendMessage({
+        type: 'SET_BLUR_INTENSITY',
+        tabId: currentTabId,
+        intensity
+      });
+    }
+  }
+
+  async function handleStyleChange(btn) {
+    if (!ContextBlurPro.isPro() && btn.dataset.style !== 'blur') {
+      ContextBlurPro.openUpgrade();
+      return;
+    }
+
+    document.querySelectorAll('.style-option').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+
+    ContextBlurAnalytics.track(ContextBlurAnalytics.EVENTS.STYLE_CHANGED, { style: btn.dataset.style });
+
+    if (currentTabId) {
+      await chrome.runtime.sendMessage({
+        type: 'SET_BLUR_STYLE',
+        tabId: currentTabId,
+        style: btn.dataset.style
+      });
+    }
+  }
+
+  // ── Blur Mode ──
 
   async function handleToggleChange(event) {
     const enabled = event.target.checked;
 
-    if (!currentTabId) {
-      await getCurrentTab();
-    }
+    if (!currentTabId) await getCurrentTab();
 
     try {
       await chrome.runtime.sendMessage({
@@ -127,8 +251,11 @@
         tabId: currentTabId,
         enabled
       });
-
       updateToggleUI(enabled);
+
+      if (enabled) {
+        ContextBlurAnalytics.track(ContextBlurAnalytics.EVENTS.BLUR_MODE_ON);
+      }
     } catch (e) {
       console.error('Failed to toggle blur mode:', e);
       elements.blurModeToggle.checked = !enabled;
@@ -147,22 +274,25 @@
     }
   }
 
+  // ── Auto-blur ──
+
   async function handleRunAutoBlur() {
-    // Check if disclosure has been accepted
+    if (!ContextBlurPro.isPro()) {
+      ContextBlurPro.openUpgrade();
+      return;
+    }
+
     if (!disclosureAccepted) {
       pendingAutoBlurRun = true;
       showDisclosureModal();
       return;
     }
 
-    // Run auto-blur
     await executeAutoBlur();
   }
 
   async function executeAutoBlur() {
-    if (!currentTabId) {
-      await getCurrentTab();
-    }
+    if (!currentTabId) await getCurrentTab();
 
     const types = getSelectedAutoBlurTypes();
 
@@ -171,10 +301,11 @@
       return;
     }
 
-    // Disable button during scan
     elements.runAutoBlurBtn.disabled = true;
     elements.runAutoBlurBtn.textContent = 'Scanning...';
     hideAutoBlurResult();
+
+    ContextBlurAnalytics.track(ContextBlurAnalytics.EVENTS.AUTO_BLUR_RUN, { types });
 
     try {
       const response = await chrome.tabs.sendMessage(currentTabId, {
@@ -223,6 +354,8 @@
     elements.autoBlurResult.classList.add('hidden');
   }
 
+  // ── Modal ──
+
   function showDisclosureModal() {
     elements.disclosureModal.classList.remove('hidden');
     document.body.style.overflow = 'hidden';
@@ -239,7 +372,6 @@
   }
 
   async function handleModalAccept() {
-    // Save acceptance to storage
     try {
       await chrome.storage.local.set({ autoBlurDisclosureAccepted: true });
       disclosureAccepted = true;
@@ -249,20 +381,19 @@
 
     hideDisclosureModal();
 
-    // If user was trying to run auto-blur, execute it now
     if (pendingAutoBlurRun) {
       pendingAutoBlurRun = false;
       await executeAutoBlur();
     }
   }
 
+  // ── Clear All ──
+
   function handleClearClick() {
     elements.clearAllBtn.classList.add('hidden');
     elements.confirmClearBtn.classList.remove('hidden');
 
-    if (confirmTimeout) {
-      clearTimeout(confirmTimeout);
-    }
+    if (confirmTimeout) clearTimeout(confirmTimeout);
     confirmTimeout = setTimeout(() => {
       elements.confirmClearBtn.classList.add('hidden');
       elements.clearAllBtn.classList.remove('hidden');
@@ -270,9 +401,7 @@
   }
 
   async function handleConfirmClear() {
-    if (confirmTimeout) {
-      clearTimeout(confirmTimeout);
-    }
+    if (confirmTimeout) clearTimeout(confirmTimeout);
 
     try {
       await chrome.runtime.sendMessage({
@@ -282,15 +411,15 @@
       });
 
       updateBlurCountUI(0);
-
       elements.confirmClearBtn.classList.add('hidden');
       elements.clearAllBtn.classList.remove('hidden');
-
       hideAutoBlurResult();
     } catch (e) {
       console.error('Failed to clear blurs:', e);
     }
   }
+
+  // ── Tab Navigation ──
 
   async function handleTabChange(activeInfo) {
     currentTabId = activeInfo.tabId;
@@ -300,21 +429,20 @@
     elements.blurModeToggle.checked = false;
     updateToggleUI(false);
     hideAutoBlurResult();
-
     await updateBlurCount();
   }
 
   async function handleTabUpdate(tabId, changeInfo, tab) {
     if (tabId === currentTabId && changeInfo.status === 'complete') {
       currentUrl = tab.url;
-
       elements.blurModeToggle.checked = false;
       updateToggleUI(false);
       hideAutoBlurResult();
-
       await updateBlurCount();
     }
   }
+
+  // ── Messages ──
 
   function handleMessage(message, sender, sendResponse) {
     if (message.type === 'UPDATE_BLUR_COUNT') {
@@ -326,6 +454,8 @@
     }
     return true;
   }
+
+  // ── Blur Count ──
 
   async function updateBlurCount() {
     if (!currentUrl) return;
@@ -361,22 +491,5 @@
     setTimeout(() => {
       elements.blurCount.style.transform = 'scale(1)';
     }, 150);
-  }
-
-  function startPolling() {
-    setInterval(async () => {
-      if (currentTabId && currentUrl) {
-        try {
-          const response = await chrome.tabs.sendMessage(currentTabId, {
-            type: 'GET_BLUR_COUNT'
-          });
-          if (response && typeof response.count === 'number') {
-            updateBlurCountUI(response.count);
-          }
-        } catch (e) {
-          // Tab might not have content script
-        }
-      }
-    }, 2000);
   }
 })();

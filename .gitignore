@@ -1,0 +1,9 @@
+# Build output
+dist/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Zip archives
+*.zip

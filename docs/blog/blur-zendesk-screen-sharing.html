@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How to Blur Zendesk During Screen Sharing: Hide Customer Data in Support Calls | ContextBlur</title>
+  <meta name="description" content="Support agents share Zendesk screens during QA reviews, escalations, and training. Learn how to blur customer PII, ticket details, and contact information.">
+  <link rel="canonical" href="https://contextblur.app/blog/blur-zendesk-screen-sharing.html">
+  <meta property="og:title" content="How to Blur Zendesk During Screen Sharing: Hide Customer Data in Support Calls">
+  <meta property="og:description" content="Support agents share Zendesk screens during QA reviews, escalations, and training. Learn how to blur customer PII, ticket details, and contact information.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://contextblur.app/blog/blur-zendesk-screen-sharing.html">
+  <meta property="og:site_name" content="ContextBlur">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="How to Blur Zendesk During Screen Sharing: Hide Customer Data in Support Calls">
+  <meta name="twitter:description" content="Support agents share Zendesk screens during QA reviews, escalations, and training. Learn how to blur customer PII, ticket details, and contact information.">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "How to Blur Zendesk During Screen Sharing: Hide Customer Data in Support Calls",
+    "description": "Support agents share Zendesk screens during QA reviews, escalations, and training. Learn how to blur customer PII, ticket details, and contact information.",
+    "datePublished": "2026-02-23",
+    "author": { "@type": "Organization", "name": "ContextBlur" },
+    "publisher": { "@type": "Organization", "name": "ContextBlur" }
+  }
+  </script>
+  <link rel="stylesheet" href="../blog.css">
+</head>
+<body>
+  <nav class="site-nav">
+    <div class="nav-inner">
+      <a href="/" class="nav-brand">
+        <div class="nav-logo">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+          </svg>
+        </div>
+        <span class="nav-brand-name">ContextBlur</span>
+      </a>
+      <div class="nav-links">
+        <a href="/">Home</a>
+        <a href="/blog">Blog</a>
+        <a href="/#pricing">Pricing</a>
+        <a href="/privacy.html">Privacy</a>
+        <a href="https://chromewebstore.google.com/detail/contextblur/epnjbbgfnlpkaggfpjebakbnnhpogmfh" class="nav-cta">Install</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="article-container">
+    <article class="article-card">
+      <header class="article-header">
+        <h1>How to Blur Zendesk During Screen Sharing: Hide Customer Data in Support Calls</h1>
+        <div class="article-meta">
+          <time datetime="2026-02-23">February 23, 2026</time>
+          <span class="meta-sep">&middot;</span>
+          <span>6 min read</span>
+        </div>
+        <div class="article-tags">
+          <span class="tag-badge">zendesk</span>
+          <span class="tag-badge">support</span>
+          <span class="tag-badge">screen sharing</span>
+          <span class="tag-badge">privacy</span>
+          <span class="tag-badge">customer data</span>
+        </div>
+      </header>
+
+      <div class="article-body">
+        <div class="tldr-box">
+          <p class="tldr-label">TL;DR</p>
+          <p>Before sharing your Zendesk screen, blur the customer name and email in the ticket header, sidebar contact details (phone, address, account ID), other ticket subjects visible in the queue, internal agent notes, and any custom fields containing PII. ContextBlur lets you click each of these elements once to hide them -- blurs persist across page refreshes so you only set them up once per session.</p>
+        </div>
+
+        <hr>
+
+        <h2>Why Zendesk Screen Sharing Leaks Customer Data</h2>
+
+        <p>Support teams live inside Zendesk. Every QA review, escalation call, and new-hire training session involves sharing a Zendesk screen with colleagues, managers, or external partners. The problem is that Zendesk packs every view with customer personally identifiable information.</p>
+
+        <p>A single ticket view displays the customer's full name, email address, phone number, account details, and the entire conversation history -- including attachments. The ticket queue sidebar shows dozens of other customers' names and ticket subjects. Internal notes meant only for agents often contain sensitive context like billing disputes, account numbers, or medical information.</p>
+
+        <p>This is a <a href="/blog/screen-sharing-security-best-practices">screen sharing security</a> challenge that every support org faces. One accidental reveal of a customer's personal data during a recorded training session can create a compliance incident that takes weeks to resolve.</p>
+
+        <h3>The Limits of Zendesk's Built-In Redaction</h3>
+
+        <p>Zendesk does offer a ticket redaction feature. Agents can permanently redact strings of text within ticket comments -- replacing credit card numbers or social security numbers with placeholder characters. But this tool has two critical limitations.</p>
+
+        <p>First, it permanently modifies the ticket. You are destroying the original data, which may be needed later for the support interaction. Second, and more importantly, it only affects the ticket text itself. It does nothing during a live screen share. The customer name in the header, their email in the sidebar, the list of other tickets in the queue -- none of these are covered by Zendesk's redaction tool.</p>
+
+        <p>For teams that need to comply with <a href="/blog/gdpr-screen-sharing-compliance">GDPR screen sharing</a> requirements, this gap is significant. You need a solution that visually masks data during the share without altering the underlying records.</p>
+
+        <div class="cta-wrapper">
+          <a href="https://chromewebstore.google.com/detail/contextblur/epnjbbgfnlpkaggfpjebakbnnhpogmfh" class="cta-button" target="_blank" rel="noopener">
+            Install ContextBlur — Free
+          </a>
+        </div>
+
+        <h2>What to Blur in Zendesk</h2>
+
+        <p>Before you start your screen share, review these elements and blur anything that applies to your session:</p>
+
+        <ul>
+          <li><strong>Customer name in the ticket header</strong> -- displayed prominently at the top of every ticket</li>
+          <li><strong>Customer email address</strong> -- shown in the header and the requester sidebar</li>
+          <li><strong>Phone number</strong> -- visible in the contact sidebar if the customer has one on file</li>
+          <li><strong>Ticket subject lines in the queue</strong> -- the left panel shows subjects from other customers' tickets</li>
+          <li><strong>Customer organization name</strong> -- displayed in the sidebar and often in the ticket path</li>
+          <li><strong>Internal agent notes</strong> -- yellow-highlighted notes that may contain sensitive context</li>
+          <li><strong>Custom fields with PII</strong> -- fields like "Account ID," "Billing Address," or "SSN" in the ticket sidebar</li>
+          <li><strong>CC'd email addresses</strong> -- other people looped into the ticket</li>
+          <li><strong>Attachments with sensitive filenames</strong> -- file names can reveal personal or medical information</li>
+          <li><strong>Tags containing identifiable info</strong> -- some teams use tags like customer segments or account tiers</li>
+        </ul>
+
+        <p>Not every element needs blurring for every session. A QA review with your team lead may only require blurring the customer name and email. A training session recorded for the entire department should blur everything listed above. Use the <a href="/blog/screen-sharing-privacy-tips">screen sharing checklist</a> approach -- decide what to hide before you share.</p>
+
+        <h2>Step-by-Step: Blurring Zendesk with ContextBlur</h2>
+
+        <p>Follow these steps to set up your blurs before starting a screen share. The entire process takes about 60 seconds.</p>
+
+        <ol>
+          <li><strong>Open your Zendesk ticket view.</strong> Navigate to the ticket or queue you plan to share during your call. Make sure you are on the page that others will see.</li>
+          <li><strong>Activate ContextBlur.</strong> Press <code>Ctrl+Shift+B</code> (or <code>Cmd+Shift+B</code> on Mac) to enter blur mode. You can also click the ContextBlur icon in your Chrome toolbar. Your cursor will change to indicate you are in selection mode.</li>
+          <li><strong>Blur the customer name.</strong> Click on the customer's name in the ticket header. It will immediately be covered with a blur effect. The name is now unreadable to anyone viewing your screen.</li>
+          <li><strong>Blur the email address.</strong> Click the customer email displayed below the name or in the requester sidebar. If the email appears in multiple locations on the page, click each instance.</li>
+          <li><strong>Blur the contact sidebar.</strong> Click on the phone number, organization name, and any custom fields in the right sidebar that contain personal information.</li>
+          <li><strong>Blur the ticket queue.</strong> If the left sidebar shows a list of other tickets, click on each ticket subject line to blur them. These subjects often contain customer names or descriptions of their issues.</li>
+          <li><strong>Blur internal notes.</strong> Scroll through the ticket conversation and click on any internal note blocks (the ones with the yellow background) that contain sensitive information.</li>
+          <li><strong>Exit blur mode.</strong> Press <code>Ctrl+Shift+B</code> again or click the extension icon to stop selecting elements. Your blurs are now locked in place.</li>
+          <li><strong>Verify your blurs.</strong> Scroll through the page to make sure every sensitive element is covered. Refresh the page to confirm that blurs persist -- ContextBlur remembers your selections across refreshes.</li>
+          <li><strong>Start your screen share.</strong> Open your <a href="/blog/how-to-blur-screen-sharing">screen sharing tool</a> and begin the call. Your blurs will remain active throughout the session.</li>
+        </ol>
+
+        <h3>Handling Multiple Tickets During a Call</h3>
+
+        <p>If you need to switch between tickets during a screen share, plan ahead. Open each ticket you plan to discuss before the call and apply blurs to each one. ContextBlur stores blur rules per page, so your blurs on Ticket A will still be there when you navigate back to it after viewing Ticket B.</p>
+
+        <p>For the ticket queue view, blurs applied to the list will persist as long as the DOM elements remain the same. If the list refreshes with new tickets, you may need to re-blur new entries. A practical approach is to blur the entire ticket list container rather than individual rows.</p>
+
+        <h2>Common Zendesk Screen Sharing Scenarios</h2>
+
+        <h3>QA Reviews</h3>
+
+        <p>A team lead reviews an agent's ticket handling. The focus is on the agent's responses and process -- not the customer's identity. Blur the customer name, email, phone, and organization. Leave the agent's responses and any workflow details visible.</p>
+
+        <h3>Escalation Calls</h3>
+
+        <p>An agent escalates a ticket to a specialist or manager. The specialist needs the technical details but may not need the customer's full contact information. Blur the phone number, email, and any billing details. You may keep the first name visible if it helps the conversation flow.</p>
+
+        <h3>Training Sessions</h3>
+
+        <p>A senior agent walks new hires through real ticket examples. This is the highest-risk scenario because training sessions are often recorded and stored. Blur every piece of customer PII -- name, email, phone, organization, custom fields, internal notes, and other ticket subjects in the queue. Consider using <a href="/blog/screen-sharing-privacy-tips">ContextBlur Pro</a> to auto-detect emails, phone numbers, and other PII patterns automatically.</p>
+
+        <h3>Vendor and Partner Calls</h3>
+
+        <p>Sometimes support teams share Zendesk with third-party vendors to troubleshoot integrations. This requires the most aggressive blurring -- hide all customer data, internal notes, and any ticket that is not directly relevant to the vendor's issue.</p>
+
+        <div class="cta-wrapper">
+          <a href="https://chromewebstore.google.com/detail/contextblur/epnjbbgfnlpkaggfpjebakbnnhpogmfh" class="cta-button" target="_blank" rel="noopener">
+            Install ContextBlur — Free
+          </a>
+        </div>
+
+        <h2>Auto-Detecting PII in Zendesk with ContextBlur Pro</h2>
+
+        <p>Zendesk pages are dense with personal data, and it is easy to miss an email address tucked into a custom field or a phone number in the conversation thread. ContextBlur Pro ($1.50/mo or $15/yr) adds automatic detection for common PII patterns:</p>
+
+        <ul>
+          <li><strong>Email addresses</strong> -- anywhere on the page, including within ticket comments and CC fields</li>
+          <li><strong>Phone numbers</strong> -- in the sidebar, conversation thread, or custom fields</li>
+          <li><strong>Credit card numbers</strong> -- if a customer has pasted one into a ticket (it happens more than you think)</li>
+          <li><strong>Social Security Numbers</strong> -- critical for financial services and healthcare support teams</li>
+        </ul>
+
+        <p>Auto-detect scans the entire visible page and applies blurs without requiring you to click each element individually. This is especially valuable for <a href="/blog/blur-intercom-screen-sharing">support platforms like Intercom</a> and Zendesk where PII appears in unpredictable locations throughout the interface.</p>
+
+        <p>For teams subject to GDPR, CCPA, or HIPAA requirements, the auto-detect feature provides an additional layer of protection during <a href="/use-cases/remote-work">remote work</a> screen shares. It catches the data you might overlook during a manual blurring pass.</p>
+
+        <h2>Tips for Support Teams</h2>
+
+        <p><strong>Create a team blurring protocol.</strong> Document which elements agents should blur for each type of call. Include this in your team's <a href="/blog/screen-sharing-security-best-practices">screen sharing security</a> handbook.</p>
+
+        <p><strong>Blur before you share, not during.</strong> Set up your blurs while you are still in the pre-call window. Blurring elements while your screen is already shared draws attention to the fact that sensitive data was briefly visible.</p>
+
+        <p><strong>Use blur presets for recurring views.</strong> If your team always shares the same Zendesk views during QA, set up blurs once and let them persist. ContextBlur remembers your blur selections per URL, so the next time you open that view, your blurs will already be applied.</p>
+
+        <p><strong>Test with a colleague.</strong> Before your first blurred screen share, do a quick test call with a teammate. Have them confirm that all sensitive elements are properly hidden.</p>
+
+        <hr>
+
+        <h2>Protect Customer Data in Every Zendesk Call</h2>
+
+        <p>Every time you share your Zendesk screen, you are one click away from exposing customer personal data. Zendesk's built-in redaction does not cover live screen shares -- but ContextBlur does.</p>
+
+        <p>Set up your blurs in 60 seconds, keep them active across page refreshes, and let auto-detect catch the PII you might miss. Whether you are running a QA review, an escalation call, or a department-wide training, your customers' data stays hidden.</p>
+
+        <div class="cta-wrapper">
+          <a href="https://chromewebstore.google.com/detail/contextblur/epnjbbgfnlpkaggfpjebakbnnhpogmfh" class="cta-button" target="_blank" rel="noopener">
+            Install ContextBlur — Free
+          </a>
+        </div>
+      </div>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-links">
+        <a href="/">Home</a>
+        <a href="/blog">Blog</a>
+        <a href="/privacy.html">Privacy</a>
+        <a href="https://chromewebstore.google.com/detail/contextblur/epnjbbgfnlpkaggfpjebakbnnhpogmfh">Chrome Web Store</a>
+      </div>
+      <p class="footer-copy">&copy; 2026 ContextBlur. All rights reserved.</p>
+      <span class="footer-badge">100% Local — Zero Data Transmitted</span>
+    </div>
+  </footer>
+</body>
+</html>

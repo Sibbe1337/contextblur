@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How to Blur GitHub During Screen Sharing: Protect API Keys, Repos, and Code | ContextBlur</title>
+  <meta name="description" content="Developers share GitHub during code reviews and pair programming. Learn how to blur API keys, environment variables, private repo names, and sensitive code.">
+  <link rel="canonical" href="https://contextblur.app/blog/blur-github-screen-sharing.html">
+  <meta property="og:title" content="How to Blur GitHub During Screen Sharing: Protect API Keys, Repos, and Code">
+  <meta property="og:description" content="Developers share GitHub during code reviews and pair programming. Learn how to blur API keys, environment variables, private repo names, and sensitive code.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://contextblur.app/blog/blur-github-screen-sharing.html">
+  <meta property="og:site_name" content="ContextBlur">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="How to Blur GitHub During Screen Sharing: Protect API Keys, Repos, and Code">
+  <meta name="twitter:description" content="Developers share GitHub during code reviews and pair programming. Learn how to blur API keys, environment variables, private repo names, and sensitive code.">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "How to Blur GitHub During Screen Sharing: Protect API Keys, Repos, and Code",
+    "description": "Developers share GitHub during code reviews and pair programming. Learn how to blur API keys, environment variables, private repo names, and sensitive code.",
+    "datePublished": "2026-02-23",
+    "author": { "@type": "Organization", "name": "ContextBlur" },
+    "publisher": { "@type": "Organization", "name": "ContextBlur" }
+  }
+  </script>
+  <link rel="stylesheet" href="../blog.css">
+</head>
+<body>
+  <nav class="site-nav">
+    <div class="nav-inner">
+      <a href="/" class="nav-brand">
+        <div class="nav-logo">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+          </svg>
+        </div>
+        <span class="nav-brand-name">ContextBlur</span>
+      </a>
+      <div class="nav-links">
+        <a href="/">Home</a>
+        <a href="/blog">Blog</a>
+        <a href="/#pricing">Pricing</a>
+        <a href="/privacy.html">Privacy</a>
+        <a href="https://chromewebstore.google.com/detail/contextblur/epnjbbgfnlpkaggfpjebakbnnhpogmfh" class="nav-cta">Install</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="article-container">
+    <article class="article-card">
+      <header class="article-header">
+        <h1>How to Blur GitHub During Screen Sharing: Protect API Keys, Repos, and Code</h1>
+        <div class="article-meta">
+          <time datetime="2026-02-23">February 23, 2026</time>
+          <span class="meta-sep">&middot;</span>
+          <span>6 min read</span>
+        </div>
+        <div class="article-tags">
+          <span class="tag-badge">github</span>
+          <span class="tag-badge">developer</span>
+          <span class="tag-badge">screen sharing</span>
+          <span class="tag-badge">privacy</span>
+          <span class="tag-badge">API keys</span>
+        </div>
+      </header>
+
+      <div class="article-body">
+        <div class="tldr-box">
+          <p class="tldr-label">TL;DR</p>
+          <p>Before sharing your GitHub screen, blur API keys and tokens visible in code or settings, environment variable values in <code>.env</code> files, private repository names in the sidebar, organization-level details, Actions secrets pages, and commit messages containing internal references. ContextBlur lets you click each sensitive element to hide it -- blurs persist across refreshes so your secrets stay hidden throughout the entire session.</p>
+        </div>
+
+        <hr>
+
+        <h2>Why GitHub Screen Sharing Is a Security Risk</h2>
+
+        <p>Developers share GitHub screens constantly. Code reviews, pair programming sessions, sprint demos, onboarding walkthroughs, and incident post-mortems all involve pulling up GitHub in front of other people. The problem is that GitHub surfaces sensitive data in almost every view.</p>
+
+        <p>A repository page shows the organization name, private repo names in the sidebar, and the full contents of any file you open. Settings pages display webhook URLs, deploy keys, and Actions secrets. Even a simple commit history can reveal internal project codenames, customer names in bug descriptions, or infrastructure details in branch names.</p>
+
+        <p>This is not a hypothetical risk. Leaked API keys from screen recordings and shared screenshots are a well-documented <a href="/blog/screen-sharing-security-best-practices">security best practice</a> concern. A single frame from a recorded pair programming session can expose a token that grants access to production infrastructure.</p>
+
+        <h3>Why GitHub's Built-In Features Are Not Enough</h3>
+
+        <p>GitHub does have secret scanning, which detects known token patterns in committed code and alerts repository administrators. But secret scanning is a detection tool -- it notifies you after a secret has been committed. It does nothing to prevent that secret from being visible during a live screen share.</p>
+
+        <p>GitHub also offers fine-grained personal access tokens and repository-level permissions. These are access control measures. They determine who can read or write to a repository. They do not blur or hide data on your screen when you are sharing it with someone who should not see certain details.</p>
+
+        <p>For <a href="/use-cases/developers">developer workflows</a> that involve regular screen sharing, you need a tool that works at the visual layer -- hiding elements on the page without modifying the underlying data.</p>
+
+        <div class="cta-wrapper">
+          <a href="https://chromewebstore.google.com/detail/contextblur/epnjbbgfnlpkaggfpjebakbnnhpogmfh" class="cta-button" target="_blank" rel="noopener">
+            Install ContextBlur — Free
+          </a>
+        </div>
+
+        <h2>What to Blur in GitHub</h2>
+
+        <p>Before starting a screen share, review the GitHub interface for these sensitive elements:</p>
+
+        <ul>
+          <li><strong>API keys and tokens in code</strong> -- any file containing hardcoded credentials, even in example configs</li>
+          <li><strong>Environment variable values</strong> -- <code>.env</code> file contents displayed in the code viewer</li>
+          <li><strong>Settings > Secrets and Variables</strong> -- the Actions secrets page shows secret names (values are hidden by default, but names can be revealing)</li>
+          <li><strong>Private repository names</strong> -- the left sidebar and repository dropdown list all repos you have access to</li>
+          <li><strong>Organization name and details</strong> -- the org name in the header, member lists, and billing pages</li>
+          <li><strong>Commit messages with internal references</strong> -- messages containing ticket numbers, customer names, or project codenames</li>
+          <li><strong>Webhook URLs</strong> -- displayed in Settings > Webhooks, often containing authentication tokens</li>
+          <li><strong>Deploy key fingerprints</strong> -- in Settings > Deploy keys</li>
+          <li><strong>Branch names</strong> -- branches named after customers, internal projects, or incident IDs</li>
+          <li><strong>Issue and PR titles</strong> -- may reference customers, internal systems, or security vulnerabilities</li>
+          <li><strong>Contributor email addresses</strong> -- visible in commit details and contributor profiles</li>
+        </ul>
+
+        <p>The specific elements you need to blur depend on your audience. A code review with your direct team may only require hiding the sidebar repo list. A demo for an external client should blur everything that reveals your internal infrastructure.</p>
+
+        <h2>Step-by-Step: Blurring GitHub with ContextBlur</h2>
+
+        <p>Follow these steps to prepare your GitHub screen for sharing. The setup takes about 90 seconds for a typical session.</p>
+
+        <ol>
+          <li><strong>Navigate to your starting page.</strong> Open the GitHub repository, file, or settings page you plan to show during the call. Position the page exactly as your audience will see it.</li>
+          <li><strong>Activate ContextBlur.</strong> Press <code>Ctrl+Shift+B</code> (or <code>Cmd+Shift+B</code> on Mac) to enter blur mode. You can also click the ContextBlur extension icon in your Chrome toolbar. The cursor will change to indicate selection mode.</li>
+          <li><strong>Blur the repository sidebar.</strong> If the left sidebar shows a list of your recent or pinned repositories, click on each repo name you want to hide. If you want to hide the entire list, click the sidebar container element.</li>
+          <li><strong>Blur the organization name.</strong> Click on your organization name wherever it appears -- in the header navigation, the repository path, or the org profile section.</li>
+          <li><strong>Blur sensitive code.</strong> If you have a file open that contains API keys, tokens, or environment variables, click on the specific code block or line containing the secret. For <code>.env</code> files, you may want to blur individual value fields while leaving the variable names visible.</li>
+          <li><strong>Blur commit messages.</strong> In the commit history view, click on any commit message that contains internal references, customer names, or project codenames.</li>
+          <li><strong>Blur the Settings pages.</strong> If you plan to show repository settings, navigate to Settings > Secrets and Variables > Actions and blur the secret names. Do the same for Webhooks and Deploy keys.</li>
+          <li><strong>Blur issue and PR titles.</strong> In the Issues or Pull Requests tab, click on any titles that reference sensitive information.</li>
+          <li><strong>Exit blur mode.</strong> Press <code>Ctrl+Shift+B</code> again or click the extension icon. Your blurs are locked in place and will persist across page refreshes.</li>
+          <li><strong>Test your setup.</strong> Scroll through the pages you plan to share and verify that all sensitive elements are covered. Open your <a href="/blog/how-to-blur-screen-sharing">screen sharing tool</a> and confirm the blurs are visible in the shared view.</li>
+        </ol>
+
+        <h3>Navigating Between Files During Code Review</h3>
+
+        <p>Code reviews often involve jumping between multiple files. ContextBlur stores blur rules per page URL, so blurs you apply to <code>repo/blob/main/config.py</code> will remain when you navigate away and come back. However, if you open a new file you have not pre-blurred, you will need to blur any sensitive elements in that file on the fly.</p>
+
+        <p>A practical strategy: before the code review, open each file you plan to discuss in a separate browser tab. Apply blurs to all tabs. Then during the review, switch between pre-blurred tabs rather than navigating within a single tab.</p>
+
+        <h2>Common GitHub Screen Sharing Scenarios</h2>
+
+        <h3>Code Reviews</h3>
+
+        <p>The most frequent GitHub screen sharing scenario. You are walking a reviewer through your changes. Blur: the sidebar repo list (it shows other projects), any hardcoded credentials in the diff, commit messages referencing internal tickets, and the organization name if the reviewer is external. Follow a <a href="/blog/screen-sharing-checklist">screen sharing checklist</a> to make sure nothing is missed.</p>
+
+        <h3>Pair Programming Sessions</h3>
+
+        <p>You are sharing your screen while coding with a colleague. The risk here is that you may open unexpected files or navigate to pages you did not plan to show. Blur the repo sidebar and organization details as a baseline. For any file containing secrets, blur the values before opening them on the shared screen.</p>
+
+        <h3>Sprint Demos and Stakeholder Presentations</h3>
+
+        <p>Showing progress to product managers, executives, or clients. These audiences do not need to see repository internals. Blur: all repo names except the one being demoed, the organization name, contributor lists, and any open issues or PRs that reference other projects.</p>
+
+        <h3>Onboarding New Team Members</h3>
+
+        <p>Walking a new hire through the codebase. You may want to show the general structure while hiding credentials and secrets. Blur: all API keys, tokens, <code>.env</code> values, Actions secrets, and webhook URLs. Leave the code structure and documentation visible. This is a key part of building <a href="/blog/screen-sharing-for-developers">developer-friendly</a> onboarding flows.</p>
+
+        <div class="cta-wrapper">
+          <a href="https://chromewebstore.google.com/detail/contextblur/epnjbbgfnlpkaggfpjebakbnnhpogmfh" class="cta-button" target="_blank" rel="noopener">
+            Install ContextBlur — Free
+          </a>
+        </div>
+
+        <h2>Auto-Detecting Sensitive Patterns with ContextBlur Pro</h2>
+
+        <p>GitHub pages can contain email addresses, API keys, and other sensitive patterns scattered throughout code files, commit messages, and issue comments. ContextBlur Pro ($1.50/mo or $15/yr) adds automatic detection for:</p>
+
+        <ul>
+          <li><strong>Email addresses</strong> -- in code comments, commit metadata, contributor profiles, and issue threads</li>
+          <li><strong>Phone numbers</strong> -- occasionally found in code comments, README files, or issue descriptions</li>
+          <li><strong>Credit card numbers</strong> -- rare in GitHub but possible in test data files or issue reports</li>
+          <li><strong>SSN patterns</strong> -- found in test fixtures or configuration files in healthcare and financial repos</li>
+        </ul>
+
+        <p>The auto-detect feature scans the visible page and applies blurs without requiring you to click each element individually. This is particularly useful for code files where a single page might contain dozens of email addresses in import headers, license blocks, or author annotations.</p>
+
+        <p>For teams working with <a href="/blog/blur-aws-console-screen-sharing">cloud infrastructure</a>, the combination of GitHub secret scanning (for committed credentials) and ContextBlur's visual blurring (for screen sharing) provides defense at both layers -- the repository level and the presentation level.</p>
+
+        <h2>Tips for Developer Teams</h2>
+
+        <p><strong>Establish a team screen sharing protocol.</strong> Define which elements developers should blur for internal versus external screen shares. Include this in your <a href="/blog/screen-sharing-security-best-practices">screen sharing security</a> documentation alongside your existing code review guidelines.</p>
+
+        <p><strong>Blur before you share, never during.</strong> Setting up blurs while your screen is already visible to others defeats the purpose. Take 90 seconds before the call to prepare your views.</p>
+
+        <p><strong>Use separate browser profiles.</strong> If you frequently switch between personal and work GitHub accounts, use separate Chrome profiles. This prevents your personal repos from appearing in autocomplete or sidebar suggestions during work screen shares.</p>
+
+        <p><strong>Review your commit messages.</strong> Even with blurring, develop the habit of writing commit messages that do not contain customer names, internal codenames, or infrastructure details. This reduces your blurring workload and improves security at the source.</p>
+
+        <hr>
+
+        <h2>Keep Your Code and Secrets Hidden During Every Screen Share</h2>
+
+        <p>GitHub is designed to surface information -- repository names, code contents, commit history, and settings are all meant to be visible to authorized users. But during a screen share, your audience may include people who should not see all of that information.</p>
+
+        <p>ContextBlur gives you precise control over what is visible and what is hidden. Set up your blurs in 90 seconds, keep them persistent across navigation, and let auto-detect catch the patterns you might miss.</p>
+
+        <div class="cta-wrapper">
+          <a href="https://chromewebstore.google.com/detail/contextblur/epnjbbgfnlpkaggfpjebakbnnhpogmfh" class="cta-button" target="_blank" rel="noopener">
+            Install ContextBlur — Free
+          </a>
+        </div>
+      </div>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-links">
+        <a href="/">Home</a>
+        <a href="/blog">Blog</a>
+        <a href="/privacy.html">Privacy</a>
+        <a href="https://chromewebstore.google.com/detail/contextblur/epnjbbgfnlpkaggfpjebakbnnhpogmfh">Chrome Web Store</a>
+      </div>
+      <p class="footer-copy">&copy; 2026 ContextBlur. All rights reserved.</p>
+      <span class="footer-badge">100% Local — Zero Data Transmitted</span>
+    </div>
+  </footer>
+</body>
+</html>

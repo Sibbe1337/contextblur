@@ -1,0 +1,165 @@
+---
+title: "Screen Sharing Privacy for Sales Engineers: How to Demo Without Exposing Client Data"
+description: "Sales engineers share CRM data, dashboards, and customer accounts daily during product demos. Learn how to blur sensitive information and protect client privacy."
+date: "2026-02-23"
+tags: ["sales", "demo", "screen sharing", "privacy", "use case"]
+readingTime: 7
+---
+
+**TL;DR:** Sales engineers can protect client data during live demos by using ContextBlur to selectively blur revenue figures, customer names, and account details in Salesforce, HubSpot, and Stripe -- without ever leaving the browser tab they are presenting.
+
+---
+
+## The SE's Dilemma: Real Data, Real Risk
+
+If you are a sales engineer, your day looks something like this: you hop on a Zoom call with a prospect, pull up a live Salesforce dashboard to show how your product integrates, switch over to HubSpot to walk through a workflow, and then open Stripe to demonstrate billing features. Along the way, you are exposing dozens of real customer names, revenue figures, contract values, and account configurations -- all on a screen that is being shared, recorded, and sometimes redistributed.
+
+This is not a hypothetical problem. According to Tessian's 2023 data loss prevention report, 52% of employees have accidentally exposed sensitive data during screen sharing. For sales engineers, the risk is amplified because you are sharing screens multiple times per day, often with external audiences who are evaluating your product.
+
+The challenge is that demos with fake data look fake. Prospects can tell when they are looking at "Acme Corp" and "$99,999" placeholder values. Real data builds credibility. But real data also means real liability.
+
+<ChromeStoreButton />
+
+## Why This Problem Is Getting Worse
+
+Three trends are colliding to make [screen sharing privacy](/blog/how-to-blur-screen-sharing) harder for sales engineers:
+
+### 1. Remote-First Sales Cycles
+
+The shift to remote selling means that nearly every product demo happens over screen share. There is no more gathering around a monitor in a conference room where you control who sees what. Now your screen is broadcast to laptops across the country -- or the world -- and you have no idea who else might be watching or recording on the other end.
+
+### 2. Multi-Tenant Environments
+
+Modern SaaS products serve multiple customers from the same interface. When you log into your own product to run a demo, you are likely looking at a dashboard that aggregates data from dozens or hundreds of customers. Switching between accounts means that for a brief moment, a list of all your customer names is visible.
+
+### 3. Recording Culture
+
+Sales calls are routinely recorded with tools like Gong, Chorus, or native Zoom recording. That means any data you expose is not just visible for a few seconds -- it is captured permanently in a video file that gets indexed, transcribed, and shared across the organization. A slip that might have gone unnoticed in a live meeting becomes a searchable, permanent record.
+
+## What Sales Engineers Typically Expose
+
+Let's walk through the most common applications sales engineers share and what sensitive data appears in each.
+
+### Salesforce
+
+Salesforce dashboards are the biggest culprit. When you share a Salesforce screen, you are typically exposing:
+
+- **Account names** of existing customers
+- **Deal values** and pipeline amounts
+- **Contact information** including emails and phone numbers
+- **Activity logs** showing internal notes and call summaries
+- **Custom fields** that may contain contract terms or pricing tiers
+
+Even if you are only showing a specific account, the sidebar navigation, recent items list, and global search suggestions can reveal other customer names. Read our dedicated guide on how to [blur Salesforce during](/blog/blur-salesforce-screen-sharing) live screen sharing sessions.
+
+### HubSpot
+
+HubSpot is commonly used alongside Salesforce or as a standalone CRM. During demos, SEs frequently expose:
+
+- **Contact lists** with names, emails, and lifecycle stages
+- **Deal boards** showing pipeline values across multiple prospects
+- **Email templates** that may reference specific customer situations
+- **Workflow automations** that reveal internal business logic
+
+If you use HubSpot for demos, check out our guide on how to [blur HubSpot during](/blog/blur-hubspot-during-demo) product walkthroughs.
+
+### Stripe
+
+For SEs at fintech or SaaS companies, Stripe is a common demo tool. The Stripe dashboard reveals:
+
+- **Transaction histories** with customer names and amounts
+- **Subscription details** including pricing and billing cycles
+- **Payout schedules** and bank account information
+- **Invoice records** with customer addresses and tax IDs
+
+The financial sensitivity of Stripe data makes it one of the highest-risk applications to share. Our guide on how to [blur Stripe dashboards](/blog/blur-stripe-dashboard-screen-sharing) covers exactly which elements to target.
+
+## The "What SEs Should Blur" Checklist
+
+Before your next demo, run through this checklist to identify what needs to be blurred on each screen you plan to share:
+
+- [ ] **Customer names** in dashboards, lists, and navigation sidebars
+- [ ] **Revenue figures** including deal values, MRR, ARR, and transaction amounts
+- [ ] **Contact information** such as emails, phone numbers, and addresses
+- [ ] **Account IDs** and internal reference numbers
+- [ ] **Pipeline views** that reveal how many customers you have or their relative size
+- [ ] **Recent items** and search history in CRM navigation
+- [ ] **Browser tabs** that might show other customer names or internal tools
+- [ ] **Notification badges** and popups from Slack, email, or other apps
+- [ ] **Internal notes** and activity logs attached to records
+- [ ] **Pricing tiers** and discount structures visible in billing tools
+- [ ] **Browser bookmarks bar** that might reveal internal tools or client-specific links
+
+This checklist works well alongside our broader [screen sharing checklist](/blog/screen-sharing-checklist) that covers preparation steps for any type of call.
+
+## How ContextBlur Solves This for SEs
+
+ContextBlur is a Chrome extension that lets you blur any element on any web page in real time. For sales engineers, this means you can:
+
+1. **Pre-configure blur zones** on the pages you demo most frequently. Set up your Salesforce dashboard, HubSpot pipeline, and Stripe overview once, and the blurs persist every time you visit those pages.
+
+2. **Blur on the fly** during a live demo. If you accidentally navigate to a page with sensitive data, you can blur elements in seconds without the prospect noticing a disruption.
+
+3. **Keep your demo authentic.** Because you are working with real data -- just selectively obscured -- your demo feels genuine. Prospects see real workflows, real UI, and real-time responses. They just cannot read the specific values that are not theirs.
+
+4. **Avoid the screenshot-and-redact workflow.** Many SEs currently take screenshots, redact them in an image editor, and paste them into slides. This is time-consuming, looks unprofessional, and does not work for live, interactive demos.
+
+<ChromeStoreButton />
+
+## Building a Pre-Demo Privacy Routine
+
+The best sales engineers treat privacy preparation the same way they treat demo preparation -- as a non-negotiable part of the process. Here is a practical routine you can adopt:
+
+### 30 Minutes Before the Call
+
+1. Open every application you plan to share during the demo.
+2. Navigate to the exact pages and views you will show.
+3. Activate ContextBlur and verify that all sensitive elements are blurred.
+4. Check your browser tabs -- close anything that is not relevant.
+5. Clear your browser's recent search history and URL bar suggestions.
+
+### During the Call
+
+1. Share only the specific tab you need, not your entire screen.
+2. If you need to switch applications, stop sharing, switch, verify the blur state, and resume sharing.
+3. If a prospect asks to see something unplanned, take a moment to set up blurs before navigating.
+
+### After the Call
+
+1. If the call was recorded, review the recording for any accidental exposure.
+2. Note any new pages or views that came up so you can pre-configure blurs for next time.
+3. Update your demo environment if customer data has changed.
+
+This routine pairs well with general [screen sharing etiquette](/blog/screen-sharing-etiquette) practices that help you present professionally regardless of the tool you are using.
+
+## What About Sandbox Environments?
+
+Some sales engineers maintain a separate sandbox or demo environment with fake data. This is a valid approach, but it has significant drawbacks:
+
+- **Maintenance burden.** Demo environments need to be kept up to date with the latest product features, which means someone has to maintain them.
+- **Data staleness.** Fake data does not change organically, so dashboards look static and unrealistic.
+- **Feature gaps.** Sandbox environments often lack integrations, third-party connections, or the volume of data needed to demonstrate real-world performance.
+- **Switching friction.** If a prospect asks an unexpected question, you cannot just "pop over" to real data without exposing it.
+
+ContextBlur lets you use your real production environment as your demo environment -- with the sensitive parts obscured. This approach is also useful for [consultants](/use-cases/consultants) who need to show client work without revealing proprietary information.
+
+## Protecting Your Company and Your Customers
+
+Data exposure during demos is not just an embarrassment -- it can have real consequences:
+
+- **Customer trust.** If a customer finds out their data was shown to a competitor during a demo, that relationship is damaged.
+- **Contractual liability.** Many enterprise contracts include clauses about data handling and confidentiality. Exposing customer data during a demo could be a breach.
+- **Regulatory risk.** Depending on the data and the jurisdictions involved, accidental exposure could trigger notification requirements under GDPR, CCPA, or other privacy regulations.
+- **Competitive intelligence.** Your customer list, pricing structure, and revenue figures are valuable competitive intelligence. Every demo is a potential leak.
+
+## Take Action Today
+
+You do not need to overhaul your demo process to improve privacy. Start with these three steps:
+
+1. **Install ContextBlur** and set up blur zones on your three most-shared pages. It takes less than five minutes.
+2. **Run through the checklist above** before your next demo and identify the data you are currently exposing.
+3. **Share this article** with your SE team. Privacy is a team discipline -- one person's slip can affect the entire organization.
+
+Your prospects will never notice what you have blurred. But your customers will notice if you fail to protect their data.
+
+<ChromeStoreButton />
