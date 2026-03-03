@@ -613,6 +613,88 @@ img {
   margin: 36px 0;
 }
 
+/* ──────────────────────────────────────────
+   Smart Install Assistant (v3)
+   ────────────────────────────────────────── */
+
+.install-assistant {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 90;
+  width: min(360px, calc(100vw - 24px));
+  padding: 14px 14px 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.68);
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow:
+    0 10px 24px rgba(17, 24, 39, 0.12),
+    0 2px 8px rgba(17, 24, 39, 0.08);
+  transform: translateY(16px);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 0.22s ease, opacity 0.22s ease;
+}
+
+.install-assistant[data-visible="true"] {
+  transform: translateY(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.install-assistant__close {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 28px;
+  height: 28px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: #6b7280;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.install-assistant__close:hover {
+  background: rgba(139, 92, 246, 0.08);
+  color: #6d28d9;
+}
+
+.install-assistant__text {
+  margin: 0 34px 10px 0;
+  font-size: 13px;
+  line-height: 1.45;
+  color: #374151;
+}
+
+.install-assistant__cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 38px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.35);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.install-assistant__cta:hover {
+  color: #fff;
+  text-decoration: none;
+  box-shadow: 0 6px 16px rgba(139, 92, 246, 0.45);
+  transform: translateY(-1px);
+}
+
 
 /* ──────────────────────────────────────────
    Table of Contents
@@ -927,6 +1009,13 @@ textarea:focus-visible,
     padding: 14px 20px;
   }
 
+  .install-assistant {
+    right: 12px;
+    bottom: 12px;
+    width: calc(100vw - 24px);
+    padding: 12px;
+  }
+
   .tldr-box {
     padding: 16px 18px;
   }
@@ -1019,6 +1108,7 @@ textarea:focus-visible,
   .site-footer,
   .cta-button,
   .cta-wrapper,
+  .install-assistant,
   .toc-sidebar,
   .related-articles,
   .nav-toggle {
