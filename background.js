@@ -54,18 +54,33 @@ importScripts('ExtPay.js');
         break;
 
       case 'OPEN_PAYMENT_PAGE':
-        extpay.openPaymentPage();
-        sendResponse({ success: true });
+        try {
+          await extpay.openPaymentPage();
+          sendResponse({ success: true });
+        } catch (e) {
+          console.error('ContextBlur: Failed to open payment page', e);
+          sendResponse({ success: false, error: e.message || String(e) });
+        }
         break;
 
       case 'START_TRIAL':
-        extpay.openTrialPage('7-day');
-        sendResponse({ success: true });
+        try {
+          await extpay.openTrialPage('7-day');
+          sendResponse({ success: true });
+        } catch (e) {
+          console.error('ContextBlur: Failed to open trial page', e);
+          sendResponse({ success: false, error: e.message || String(e) });
+        }
         break;
 
       case 'OPEN_LOGIN_PAGE':
-        extpay.openLoginPage();
-        sendResponse({ success: true });
+        try {
+          await extpay.openLoginPage();
+          sendResponse({ success: true });
+        } catch (e) {
+          console.error('ContextBlur: Failed to open login page', e);
+          sendResponse({ success: false, error: e.message || String(e) });
+        }
         break;
 
       // ── Blur State ──

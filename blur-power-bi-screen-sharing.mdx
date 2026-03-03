@@ -1,0 +1,133 @@
+---
+title: "How to Blur Power BI Dashboards During Screen Sharing: Hide Revenue and Customer Data"
+description: "Power BI dashboards contain sensitive revenue, customer, and business metrics. Learn how to blur confidential data before sharing your screen in meetings."
+date: "2026-02-23"
+tags: ["power bi", "dashboard", "screen sharing", "privacy", "business intelligence"]
+readingTime: 6
+---
+
+**TL;DR:** Before sharing your Power BI dashboard, blur revenue totals and financial figures, customer names in tables and charts, specific metric values that are board-confidential, filter selections that reveal strategic criteria, and any data cards showing numbers you do not want your audience to see. ContextBlur lets you click each chart element, data card, or table cell to hide it -- blurs persist across refreshes so your dashboard stays protected throughout the meeting.
+
+---
+
+## Why Power BI Dashboards Are a Screen Sharing Liability
+
+Power BI is the dominant enterprise business intelligence platform. Analysts, managers, and executives use it daily to visualize revenue, customer metrics, financial forecasts, and operational data. And they share these dashboards constantly -- in executive reviews, board meetings, stakeholder presentations, cross-department syncs, and vendor calls.
+
+The problem is that a single Power BI dashboard can contain the most confidential data in your organization. Revenue figures, profit margins, customer acquisition costs, churn rates, employee headcount, regional performance breakdowns -- all displayed in colorful charts designed to be read at a glance. One screen share with the wrong audience, and data that took months to restrict through proper access controls is visible to everyone on the call.
+
+This is a [screen sharing security](/blog/screen-sharing-security-best-practices) problem that BI teams increasingly face as remote work makes screen sharing the default way to present data. The Microsoft Fabric community forums have multiple threads from administrators asking how to obfuscate specific data points during live presentations without modifying the underlying report.
+
+### The Limits of Power BI's Row Level Security
+
+Power BI includes Row Level Security (RLS), a powerful feature that restricts which data rows a user can see based on their role. RLS is designed for access control -- ensuring that a regional manager only sees data for their region, or that a partner only sees data related to their accounts.
+
+But RLS does not solve the screen sharing problem for two reasons. First, it filters entire rows of data based on user identity. You cannot use it to hide one specific metric on a dashboard while showing everything else. If you have access to the revenue dashboard, you see all of the revenue data -- there is no way to say "show me the charts but blur the totals."
+
+Second, RLS applies to the data consumer, not the presenter. When you share your screen, everyone sees exactly what you see. Your RLS role grants you full access to the data, and that full access is what appears on the shared screen.
+
+For teams that need to comply with [GDPR requirements](/blog/gdpr-screen-sharing-compliance) or internal data classification policies, RLS is necessary but not sufficient. You need a visual masking layer on top of the access control layer.
+
+<ChromeStoreButton />
+
+## What to Blur in Power BI
+
+Before sharing a Power BI dashboard, review these common elements that may need blurring:
+
+- **Revenue totals and financial figures** -- data cards, KPI visuals, and chart axis values showing dollar amounts
+- **Customer names in tables** -- any table or matrix visual listing individual customers
+- **Customer names in chart labels** -- bar charts, pie charts, or scatter plots with customer names as data labels
+- **Specific metric values** -- individual numbers like profit margin, CAC, LTV, or churn rate that are board-confidential
+- **Filter selections** -- slicer values that reveal strategic criteria (e.g., filtering by a specific acquisition channel or customer segment)
+- **Forecast and projection figures** -- especially unreleased financial projections
+- **Employee metrics** -- headcount, salary distributions, or performance data
+- **Regional performance breakdowns** -- if certain regions' data is restricted to specific teams
+- **Drill-through details** -- granular data that appears when clicking into a summary chart
+- **Page tabs with sensitive names** -- tab titles like "Board Financials" or "M&A Pipeline" visible at the bottom
+
+The elements you blur depend entirely on your audience. An internal team meeting may require no blurring at all. A cross-department presentation might need revenue figures hidden. A call with external partners should have nearly everything blurred except the specific metrics being discussed.
+
+## Step-by-Step: Blurring Power BI with ContextBlur
+
+These steps apply to Power BI Service (the web interface at app.powerbi.com). ContextBlur works with any web-based application, making it a natural fit for [remote work](/use-cases/remote-work) scenarios where Power BI dashboards are shared through browser-based screen sharing tools.
+
+1. **Open your Power BI dashboard.** Navigate to the specific report or dashboard you plan to share. Switch to the page or view that will be your starting point during the presentation.
+
+2. **Activate ContextBlur.** Press `Ctrl+Shift+B` (or `Cmd+Shift+B` on Mac) to enter blur mode. The cursor will change to indicate you are in element selection mode.
+
+3. **Blur data cards and KPIs.** Click on each data card visual that displays a number you want to hide -- revenue totals, profit margins, or customer counts. The number will be replaced with a blur effect while the card label remains readable (or blur the entire card if the label itself is sensitive).
+
+4. **Blur chart values.** For bar charts or column charts, click on the axis labels or data labels showing specific numbers. For pie charts, click on the value labels or legend entries that reveal confidential breakdowns.
+
+5. **Blur table rows or columns.** If a table visual lists customer names or detailed figures, click on the specific cells or column headers you want to hide. For large tables, click the entire table container to blur everything at once.
+
+6. **Blur filter selections.** Click on any slicer or filter visual that shows the criteria you have selected. A slicer showing "Enterprise Customers > $1M ARR" reveals both your segmentation strategy and your threshold values.
+
+7. **Blur page tabs.** If the tab names at the bottom of the report reveal sensitive information, click on them to blur the text.
+
+8. **Exit blur mode.** Press `Ctrl+Shift+B` again to stop selecting elements. All blurs are locked in place.
+
+9. **Navigate to other pages.** If your presentation covers multiple report pages, switch to each page and repeat the blurring process. ContextBlur remembers blurs per page, so they will persist when you navigate back.
+
+10. **Verify and start sharing.** Scroll through each page to confirm all sensitive data is hidden. Then open [your screen sharing tool](/blog/how-to-blur-screen-sharing) and begin the presentation.
+
+### Working with Interactive Dashboards
+
+Power BI dashboards are interactive -- users can click charts to cross-filter, drill through to detail pages, and change slicer selections. During a screen share, this interactivity can reveal data you did not plan to show.
+
+If you plan to interact with the dashboard during the presentation, test each interaction beforehand. Clicking a bar chart segment may update a table visual with detailed customer data. Changing a date slicer may reveal numbers from a period you intended to keep hidden. Apply blurs to the elements that appear after each interaction, not just the default view.
+
+For presentations where you want to avoid this risk entirely, consider exporting the dashboard to a static PDF or PowerPoint and blurring the static version instead. But for live data discussions, ContextBlur on the web interface provides the most flexibility.
+
+## Common Power BI Screen Sharing Scenarios
+
+### Executive Reviews
+
+A department head presents quarterly results to the leadership team. Some metrics may be pre-release or board-confidential. Blur: specific revenue figures, forecast projections, and any metrics that are not yet approved for wider distribution. Leave the trend lines and directional indicators visible -- executives often care more about direction than exact numbers. Follow a [screen sharing checklist](/blog/screen-sharing-checklist) to prepare before each review.
+
+### Board Meetings
+
+The highest-sensitivity scenario. Board presentations often include M&A pipeline data, detailed financial forecasts, and competitive analysis. If you are screen sharing Power BI during a board meeting (rather than presenting static slides), blur everything except the specific data points on the agenda. Apply blurs aggressively -- it is better to unblur something on request than to accidentally show something confidential.
+
+### Cross-Department Presentations
+
+Sharing analytics with teams that have different data access levels. The marketing team presenting to the sales team may need to hide campaign spend data. The finance team presenting to engineering may need to hide salary benchmarks. Blur the metrics that fall outside the audience's access level.
+
+### Client and Partner Calls
+
+Sharing Power BI data with external parties. This requires the most comprehensive blurring. Hide all internal metrics, customer names, financial figures, and filter criteria. Show only the specific data points that are relevant to the external party's context -- and blur everything else. This aligns with [Teams screen sharing](/blog/microsoft-teams-screen-sharing-privacy) best practices for external meetings.
+
+<ChromeStoreButton />
+
+## Auto-Detecting PII in Power BI with ContextBlur Pro
+
+While Power BI dashboards primarily contain business metrics rather than personal identifiers, customer-level reports often include email addresses, phone numbers, and account identifiers. ContextBlur Pro ($15/year) automatically detects and blurs:
+
+- **Email addresses** -- in customer detail tables, tooltip popups, and drill-through pages
+- **Phone numbers** -- in customer contact tables and CRM-connected reports
+- **Credit card numbers** -- rare but possible in transaction-level reports
+- **SSN patterns** -- in HR dashboards or compliance reports
+
+Auto-detect is especially useful for drill-through scenarios. You may have blurred the summary dashboard, but when you click through to a customer detail page, new PII elements appear. Auto-detect catches these automatically without requiring you to manually blur each new element.
+
+For teams managing dashboards that contain data from [spreadsheet tools](/blog/blur-google-sheets-screen-sharing) and other sources, the auto-detect feature provides a consistent privacy layer across all your data presentation tools.
+
+## Tips for BI Teams
+
+**Create blurring templates per audience type.** Document which elements to blur for internal reviews versus external presentations. Share this as part of your team's [screen sharing privacy](/blog/screen-sharing-security-best-practices) guidelines.
+
+**Blur before the meeting, not during.** Arriving at a board meeting and blurring dashboard elements while the board watches undermines confidence. Set up your blurs 10 minutes before the call.
+
+**Test drill-through paths.** If your presentation involves interactive elements, walk through every click path and blur sensitive data that appears at each level.
+
+**Use the reading view.** Power BI's reading view (as opposed to edit mode) provides a cleaner presentation experience and reduces the chance of accidentally revealing the data model or DAX formulas behind the visuals.
+
+---
+
+## Present Your Dashboards Without Exposing Confidential Data
+
+Power BI dashboards are built to make data visible and accessible. That is exactly the problem during screen sharing -- the data is visible to everyone on the call, regardless of their access level.
+
+ContextBlur gives you visual-level control over what your audience sees. Blur specific data cards, chart values, table rows, and filter selections without modifying the underlying report. Set up once, present confidently, and keep your organization's most sensitive metrics private.
+
+<ChromeStoreButton />

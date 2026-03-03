@@ -45,15 +45,36 @@ const ContextBlurPro = (() => {
   }
 
   async function openUpgrade() {
-    await chrome.runtime.sendMessage({ type: 'OPEN_PAYMENT_PAGE' });
+    try {
+      const response = await chrome.runtime.sendMessage({ type: 'OPEN_PAYMENT_PAGE' });
+      if (response && !response.success) {
+        console.error('ContextBlur: Payment page error:', response.error);
+      }
+    } catch (e) {
+      console.error('ContextBlur: Could not open payment page', e);
+    }
   }
 
   async function startTrial() {
-    await chrome.runtime.sendMessage({ type: 'START_TRIAL' });
+    try {
+      const response = await chrome.runtime.sendMessage({ type: 'START_TRIAL' });
+      if (response && !response.success) {
+        console.error('ContextBlur: Trial page error:', response.error);
+      }
+    } catch (e) {
+      console.error('ContextBlur: Could not start trial', e);
+    }
   }
 
   async function openLogin() {
-    await chrome.runtime.sendMessage({ type: 'OPEN_LOGIN_PAGE' });
+    try {
+      const response = await chrome.runtime.sendMessage({ type: 'OPEN_LOGIN_PAGE' });
+      if (response && !response.success) {
+        console.error('ContextBlur: Login page error:', response.error);
+      }
+    } catch (e) {
+      console.error('ContextBlur: Could not open login page', e);
+    }
   }
 
   function getStatus() {

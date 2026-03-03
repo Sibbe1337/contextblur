@@ -174,21 +174,30 @@
       iconOn.classList.remove('hidden');
       iconOff.classList.add('hidden');
       activeIndicator.classList.remove('hidden');
+      activeIndicator.classList.add('fade-in');
     } else {
       blurToggleBtn.classList.remove('active');
       toggleText.textContent = 'Enable Blur Mode';
       iconOn.classList.add('hidden');
       iconOff.classList.remove('hidden');
       activeIndicator.classList.add('hidden');
+      activeIndicator.classList.remove('fade-in');
     }
   }
 
   function updateBlurCount(count) {
     blurCountEl.textContent = count;
     if (count > 0) {
+      const wasHidden = blurCountSection.classList.contains('hidden');
       blurCountSection.classList.remove('hidden');
+      if (wasHidden) blurCountSection.classList.add('fade-in');
+
+      // Bounce the badge
+      blurCountEl.style.transform = 'scale(1.2)';
+      setTimeout(() => { blurCountEl.style.transform = 'scale(1)'; }, 150);
     } else {
       blurCountSection.classList.add('hidden');
+      blurCountSection.classList.remove('fade-in');
     }
   }
 })();

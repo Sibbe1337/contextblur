@@ -267,10 +267,12 @@
       elements.modeStatus.textContent = 'Active — click to blur';
       elements.modeStatus.classList.add('active');
       elements.activeIndicator.classList.remove('hidden');
+      elements.activeIndicator.classList.add('fade-in');
     } else {
       elements.modeStatus.textContent = 'Click elements to blur';
       elements.modeStatus.classList.remove('active');
       elements.activeIndicator.classList.add('hidden');
+      elements.activeIndicator.classList.remove('fade-in');
     }
   }
 
@@ -302,7 +304,8 @@
     }
 
     elements.runAutoBlurBtn.disabled = true;
-    elements.runAutoBlurBtn.textContent = 'Scanning...';
+    elements.runAutoBlurBtn.textContent = 'Scanning';
+    elements.runAutoBlurBtn.classList.add('btn-scanning');
     hideAutoBlurResult();
 
     ContextBlurAnalytics.track(ContextBlurAnalytics.EVENTS.AUTO_BLUR_RUN, { types });
@@ -329,6 +332,7 @@
     } finally {
       elements.runAutoBlurBtn.disabled = false;
       elements.runAutoBlurBtn.textContent = 'Run auto-blur now';
+      elements.runAutoBlurBtn.classList.remove('btn-scanning');
     }
   }
 
@@ -344,13 +348,20 @@
     return types;
   }
 
+  let resultDismissTimeout = null;
+
   function showAutoBlurResult(message, type) {
-    elements.autoBlurResult.textContent = message;
+    const icons = { success: '✓', error: '✗', info: '○' };
+    elements.autoBlurResult.textContent = `${icons[type] || ''} ${message}`;
     elements.autoBlurResult.className = `autoblur-result ${type}`;
     elements.autoBlurResult.classList.remove('hidden');
+
+    clearTimeout(resultDismissTimeout);
+    resultDismissTimeout = setTimeout(() => hideAutoBlurResult(), 6000);
   }
 
   function hideAutoBlurResult() {
+    clearTimeout(resultDismissTimeout);
     elements.autoBlurResult.classList.add('hidden');
   }
 
@@ -392,10 +403,12 @@
   function handleClearClick() {
     elements.clearAllBtn.classList.add('hidden');
     elements.confirmClearBtn.classList.remove('hidden');
+    elements.confirmClearBtn.classList.add('confirm-pulse');
 
     if (confirmTimeout) clearTimeout(confirmTimeout);
     confirmTimeout = setTimeout(() => {
       elements.confirmClearBtn.classList.add('hidden');
+      elements.confirmClearBtn.classList.remove('confirm-pulse');
       elements.clearAllBtn.classList.remove('hidden');
     }, 3000);
   }
