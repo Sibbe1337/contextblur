@@ -11,10 +11,18 @@
   const SHOW_AT_SCROLL_RATIO = 0.5;
   const HIDE_FOR_DAYS = 14;
   const INSTALL_URL = 'https://chromewebstore.google.com/detail/contextblur/epnjbbgfnlpkaggfpjebakbnnhpogmfh';
+  const HELPER_TIPS = [
+    'Want to avoid accidental leaks in your next demo?',
+    'Quick win: blur names, revenue, and emails before sharing your screen.',
+    'Use Auto-Blur to hide common PII in one click.',
+    'Pin ContextBlur so it is always ready before your call starts.'
+  ];
 
   let hasShown = false;
   let timerId = null;
   let assistantEl = null;
+  let tipTextEl = null;
+  let currentTipIndex = 0;
 
   function shouldSkipAssistant() {
     try {
@@ -44,15 +52,28 @@
   function buildAssistant() {
     const root = document.createElement('aside');
     root.className = 'install-assistant';
-    root.setAttribute('aria-label', 'Install reminder');
+    root.setAttribute('aria-label', 'ContextBlur helper');
     root.setAttribute('data-visible', 'false');
     root.innerHTML = ''
       + '<button type="button" class="install-assistant__close" aria-label="Dismiss">×</button>'
-      + '<p class="install-assistant__text">Protect sensitive data before your next call.</p>'
-      + `<a class="install-assistant__cta" href="${INSTALL_URL}" target="_blank" rel="noopener">Install ContextBlur Free</a>`;
+      + '<div class="install-assistant__header">'
+      + '  <div class="install-assistant__orb" aria-hidden="true">'
+      + '    <span class="install-assistant__orb-dot"></span>'
+      + '  </div>'
+      + '  <div class="install-assistant__copy">'
+      + '    <p class="install-assistant__eyebrow">CONTEXTBLUR HELPER</p>'
+      + '    <p class="install-assistant__text" role="status" aria-live="polite"></p>'
+      + '  </div>'
+      + '</div>'
+      + '<div class="install-assistant__actions">'
+      + `  <a class="install-assistant__cta" href="${INSTALL_URL}" target="_blank" rel="noopener">Get Pro</a>`
+      + '  <button type="button" class="install-assistant__next">Next tip</button>'
+      + '</div>';
 
     const closeBtn = root.querySelector('.install-assistant__close');
     const ctaLink = root.querySelector('.install-assistant__cta');
+    const nextTipBtn = root.querySelector('.install-assistant__next');
+    tipTextEl = root.querySelector('.install-assistant__text');
 
     closeBtn.addEventListener('click', function () {
       hideAssistant(true);
@@ -62,8 +83,19 @@
       hideAssistant(true);
     });
 
+    nextTipBtn.addEventListener('click', function () {
+      currentTipIndex = (currentTipIndex + 1) % HELPER_TIPS.length;
+      renderTip();
+    });
+
     document.body.appendChild(root);
     assistantEl = root;
+    renderTip();
+  }
+
+  function renderTip() {
+    if (!tipTextEl) return;
+    tipTextEl.textContent = HELPER_TIPS[currentTipIndex];
   }
 
   function showAssistant() {

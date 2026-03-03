@@ -341,75 +341,172 @@
       right: 20px;
       bottom: 20px;
       z-index: 90;
-      width: min(360px, calc(100vw - 24px));
-      padding: 14px 14px 12px;
-      border-radius: 14px;
-      border: 1px solid rgba(255, 255, 255, 0.68);
-      background: rgba(255, 255, 255, 0.94);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      box-shadow: 0 10px 24px rgba(17, 24, 39, 0.12), 0 2px 8px rgba(17, 24, 39, 0.08);
-      transform: translateY(16px);
+      width: min(430px, calc(100vw - 24px));
+      padding: 18px 18px 16px;
+      border-radius: 22px;
+      border: 1px solid rgba(255, 255, 255, 0.75);
+      background:
+        radial-gradient(circle at 100% 0%, rgba(46, 196, 182, 0.14), transparent 55%),
+        linear-gradient(145deg, rgba(255, 255, 255, 0.97), rgba(247, 250, 252, 0.95));
+      backdrop-filter: blur(18px) saturate(120%);
+      -webkit-backdrop-filter: blur(18px) saturate(120%);
+      box-shadow: 0 16px 40px rgba(17, 24, 39, 0.14), 0 2px 10px rgba(17, 24, 39, 0.08);
+      transform: translateY(20px) scale(0.98);
       opacity: 0;
       pointer-events: none;
-      transition: transform 0.22s ease, opacity 0.22s ease;
+      transition: transform 0.25s ease, opacity 0.25s ease;
+    }
+
+    .install-assistant::after {
+      content: "";
+      position: absolute;
+      left: 24px;
+      bottom: -10px;
+      width: 18px;
+      height: 18px;
+      background: rgba(255, 255, 255, 0.96);
+      transform: rotate(45deg);
+      border-right: 1px solid rgba(255, 255, 255, 0.75);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.75);
     }
 
     .install-assistant[data-visible="true"] {
-      transform: translateY(0);
+      transform: translateY(0) scale(1);
       opacity: 1;
       pointer-events: auto;
     }
 
     .install-assistant__close {
       position: absolute;
-      top: 8px;
-      right: 8px;
-      width: 28px;
-      height: 28px;
+      top: 10px;
+      right: 10px;
+      width: 32px;
+      height: 32px;
       border: 0;
-      border-radius: 8px;
+      border-radius: 10px;
       background: transparent;
-      color: #6b7280;
-      font-size: 18px;
+      color: #9ca3af;
+      font-size: 30px;
       line-height: 1;
       cursor: pointer;
+      transition: background-color 0.2s ease, color 0.2s ease;
     }
 
     .install-assistant__close:hover {
-      background: rgba(139, 92, 246, 0.08);
-      color: #6d28d9;
+      background: rgba(15, 23, 42, 0.06);
+      color: #6b7280;
+    }
+
+    .install-assistant__header {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      margin-right: 36px;
+    }
+
+    .install-assistant__orb {
+      position: relative;
+      flex-shrink: 0;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(145deg, #c6f6ef, #a7f3d0);
+      border: 1px solid rgba(15, 118, 110, 0.16);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7), 0 8px 18px rgba(45, 212, 191, 0.24);
+    }
+
+    .install-assistant__orb::after {
+      content: "";
+      position: absolute;
+      inset: 8px;
+      border-radius: 50%;
+      border: 1px dashed rgba(13, 148, 136, 0.35);
+      animation: assistant-orb-spin 12s linear infinite;
+    }
+
+    .install-assistant__orb-dot {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: linear-gradient(145deg, #14b8a6, #0d9488);
+      box-shadow: 0 0 0 6px rgba(45, 212, 191, 0.2);
+    }
+
+    .install-assistant__copy {
+      min-width: 0;
+    }
+
+    .install-assistant__eyebrow {
+      margin: 2px 0 8px;
+      font-size: 12px;
+      letter-spacing: 0.16em;
+      font-weight: 700;
+      color: #9ca3af;
     }
 
     .install-assistant__text {
-      margin: 0 34px 10px 0;
-      font-size: 13px;
-      line-height: 1.45;
-      color: #374151;
+      margin: 0;
+      font-size: 15px;
+      line-height: 1.32;
+      font-weight: 500;
+      color: #4b5563;
+    }
+
+    .install-assistant__actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 14px;
+      padding-left: 70px;
     }
 
     .install-assistant__cta {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 100%;
-      min-height: 38px;
-      padding: 8px 12px;
-      border-radius: 10px;
-      background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%);
+      min-height: 44px;
+      padding: 0 28px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #14b8a6, #0d9488);
       color: #fff;
-      font-size: 13px;
+      font-size: 15px;
       font-weight: 600;
       text-decoration: none;
-      box-shadow: 0 4px 12px rgba(139, 92, 246, 0.35);
+      box-shadow: 0 10px 22px rgba(20, 184, 166, 0.35);
       transition: box-shadow 0.2s ease, transform 0.2s ease;
     }
 
     .install-assistant__cta:hover {
       color: #fff;
       text-decoration: none;
-      box-shadow: 0 6px 16px rgba(139, 92, 246, 0.45);
+      box-shadow: 0 14px 28px rgba(20, 184, 166, 0.44);
       transform: translateY(-1px);
+    }
+
+    .install-assistant__next {
+      min-height: 44px;
+      padding: 0 18px;
+      border-radius: 14px;
+      border: 1px solid #e5e7eb;
+      background: rgba(255, 255, 255, 0.75);
+      color: #6b7280;
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+    }
+
+    .install-assistant__next:hover {
+      background: #fff;
+      color: #374151;
+      border-color: #d1d5db;
+    }
+
+    @keyframes assistant-orb-spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
     }
 
     /* ========== SOCIAL PROOF ========== */
@@ -1099,6 +1196,31 @@
         bottom: 12px;
         width: calc(100vw - 24px);
         padding: 12px;
+      }
+
+      .install-assistant::after {
+        display: none;
+      }
+
+      .install-assistant__header {
+        margin-right: 28px;
+        gap: 10px;
+      }
+
+      .install-assistant__orb {
+        width: 46px;
+        height: 46px;
+      }
+
+      .install-assistant__actions {
+        padding-left: 0;
+        margin-top: 12px;
+      }
+
+      .install-assistant__cta,
+      .install-assistant__next {
+        min-height: 40px;
+        font-size: 14px;
       }
     }
   </style>
