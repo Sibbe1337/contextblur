@@ -27,6 +27,11 @@
     blurAWSKeys: document.getElementById('blurAWSKeys'),
     blurDbConn: document.getElementById('blurDbConn'),
     blurJWT: document.getElementById('blurJWT'),
+    // Deploy guard
+    deployGuardBadge: document.getElementById('deployGuardBadge'),
+    deployGuardDescription: document.getElementById('deployGuardDescription'),
+    runDeployGuardBtn: document.getElementById('runDeployGuardBtn'),
+    deployGuardResult: document.getElementById('deployGuardResult'),
     // Modal
     disclosureModal: document.getElementById('disclosureModal'),
     modalCancelBtn: document.getElementById('modalCancelBtn'),
@@ -48,9 +53,23 @@
   // State
   let currentTabId = null;
   let currentUrl = null;
+  let deployGuardActive = false;
   let confirmTimeout = null;
   let disclosureAccepted = false;
   let pendingAutoBlurRun = false;
+  let deployGuardDismissTimeout = null;
+
+  const DEPLOY_DOMAINS = [
+    'vercel.com',
+    'netlify.com',
+    'railway.app',
+    'render.com',
+    'supabase.com',
+    'console.aws.amazon.com',
+    'cloud.google.com',
+    'portal.azure.com',
+    'fly.io'
+  ];
 
   init();
 
@@ -60,6 +79,7 @@
     await checkDisclosureStatus();
     await initProStatus();
     setupEventListeners();
+    updateDeployGuardUI();
     ContextBlurAnalytics.trackSession();
   }
 
@@ -166,6 +186,7 @@
     elements.clearAllBtn.addEventListener('click', handleClearClick);
     elements.confirmClearBtn.addEventListener('click', handleConfirmClear);
     elements.runAutoBlurBtn.addEventListener('click', handleRunAutoBlur);
+    elements.runDeployGuardBtn.addEventListener('click', handleRunDeployGuard);
     elements.modalCancelBtn.addEventListener('click', handleModalCancel);
     elements.modalAcceptBtn.addEventListener('click', handleModalAccept);
 
@@ -340,6 +361,61 @@
     }
   }
 
+  async function handleRunDeployGuard() {
+    if (!ContextBlurPro.isPro()) {
+      ContextBlurPro.openUpgrade();
+      return;
+    }
+
+    if (!currentTabId) await getCurrentTab();
+
+    const deployTypes = [
+      'apiKey',
+      'openaiKey',
+      'privateKey',
+      'awsKey',
+      'connectionString',
+      'jwt'
+    ];
+
+    elements.runDeployGuardBtn.disabled = true;
+    elements.runDeployGuardBtn.textContent = 'Scanning';
+    elements.runDeployGuardBtn.classList.add('btn-scanning');
+    hideDeployGuardResult();
+
+    try {
+      const response = await chrome.tabs.sendMessage(currentTabId, {
+        type: 'AUTO_BLUR_RUN',
+        types: deployTypes
+      });
+
+      if (response && typeof response.blurredCount === 'number') {
+        if (response.blurredCount > 0) {
+          showDeployGuardResult(
+            `Deploy Guard blurred ${response.blurredCount} risky item${response.blurredCount !== 1 ? 's' : ''}.`,
+            'success'
+          );
+          elements.deployGuardBadge.textContent = 'Guarded';
+          elements.deployGuardBadge.className = 'guard-badge active';
+        } else {
+          showDeployGuardResult('No known deploy secrets found on visible text.', 'info');
+          elements.deployGuardBadge.textContent = 'Checked';
+          elements.deployGuardBadge.className = 'guard-badge';
+        }
+        await updateBlurCount();
+      } else {
+        showDeployGuardResult('Could not run deploy guard on this page.', 'error');
+      }
+    } catch (e) {
+      console.error('Deploy guard failed:', e);
+      showDeployGuardResult('Could not scan this page. Try refreshing.', 'error');
+    } finally {
+      elements.runDeployGuardBtn.disabled = false;
+      elements.runDeployGuardBtn.textContent = 'Run safe deploy scan';
+      elements.runDeployGuardBtn.classList.remove('btn-scanning');
+    }
+  }
+
   function getSelectedAutoBlurTypes() {
     const types = [];
     if (elements.blurEmails.checked) types.push('email');
@@ -375,6 +451,21 @@
   function hideAutoBlurResult() {
     clearTimeout(resultDismissTimeout);
     elements.autoBlurResult.classList.add('hidden');
+  }
+
+  function showDeployGuardResult(message, type) {
+    const icons = { success: '✓', error: '✗', info: '○' };
+    elements.deployGuardResult.textContent = `${icons[type] || ''} ${message}`;
+    elements.deployGuardResult.className = `autoblur-result ${type}`;
+    elements.deployGuardResult.classList.remove('hidden');
+
+    clearTimeout(deployGuardDismissTimeout);
+    deployGuardDismissTimeout = setTimeout(() => hideDeployGuardResult(), 6000);
+  }
+
+  function hideDeployGuardResult() {
+    clearTimeout(deployGuardDismissTimeout);
+    elements.deployGuardResult.classList.add('hidden');
   }
 
   // ── Modal ──
@@ -454,6 +545,8 @@
     elements.blurModeToggle.checked = false;
     updateToggleUI(false);
     hideAutoBlurResult();
+    hideDeployGuardResult();
+    updateDeployGuardUI();
     await updateBlurCount();
   }
 
@@ -463,6 +556,8 @@
       elements.blurModeToggle.checked = false;
       updateToggleUI(false);
       hideAutoBlurResult();
+      hideDeployGuardResult();
+      updateDeployGuardUI();
       await updateBlurCount();
     }
   }
@@ -516,5 +611,34 @@
     setTimeout(() => {
       elements.blurCount.style.transform = 'scale(1)';
     }, 150);
+  }
+
+  function isDeployDomain(url) {
+    if (!url) return false;
+    try {
+      const parsed = new URL(url);
+      const host = parsed.hostname.toLowerCase();
+      return DEPLOY_DOMAINS.some((domain) => host === domain || host.endsWith(`.${domain}`));
+    } catch {
+      return false;
+    }
+  }
+
+  function updateDeployGuardUI() {
+    deployGuardActive = isDeployDomain(currentUrl);
+
+    if (deployGuardActive) {
+      elements.deployGuardBadge.textContent = 'Deploy';
+      elements.deployGuardBadge.className = 'guard-badge warning';
+      elements.deployGuardDescription.textContent =
+        'Deploy dashboard detected. Run safe scan before sharing this screen.';
+      elements.runDeployGuardBtn.disabled = !ContextBlurPro.isPro();
+    } else {
+      elements.deployGuardBadge.textContent = 'Idle';
+      elements.deployGuardBadge.className = 'guard-badge';
+      elements.deployGuardDescription.textContent =
+        'Detects deploy dashboards and helps blur high-risk secrets before screen sharing.';
+      elements.runDeployGuardBtn.disabled = !ContextBlurPro.isPro();
+    }
   }
 })();

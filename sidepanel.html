@@ -75,6 +75,46 @@
       </div>
     </div>
 
+    <!-- Deploy Guard (MVP) -->
+    <div class="glass-panel feature-card">
+      <div class="feature-content">
+        <div class="feature-icon">
+          <svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12l5 5L20 7"/>
+          </svg>
+        </div>
+        <div class="feature-text">
+          <div class="feature-header">
+            <h3 class="feature-title">Deploy Guard</h3>
+            <span id="deployGuardBadge" class="guard-badge">Idle</span>
+          </div>
+          <p id="deployGuardDescription" class="feature-description">
+            Detects deploy dashboards and helps blur high-risk secrets before screen sharing.
+          </p>
+        </div>
+      </div>
+
+      <div id="deployChecklist" class="deploy-checklist">
+        <div class="deploy-check-item">
+          <span class="check-dot"></span>
+          <span>API keys and token fields hidden</span>
+        </div>
+        <div class="deploy-check-item">
+          <span class="check-dot"></span>
+          <span>Connection strings and JWTs masked</span>
+        </div>
+        <div class="deploy-check-item">
+          <span class="check-dot"></span>
+          <span>Share only prepared tab/window</span>
+        </div>
+      </div>
+
+      <button id="runDeployGuardBtn" class="btn-primary">
+        Run safe deploy scan
+      </button>
+      <p id="deployGuardResult" class="autoblur-result hidden"></p>
+    </div>
+
     <!-- Stats Card -->
     <div class="glass-panel">
       <div class="stats-header">
