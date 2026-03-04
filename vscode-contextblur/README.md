@@ -62,4 +62,5 @@ All detection happens locally in your editor. No data is transmitted anywhere.
 ## Links
 
 - [ContextBlur Browser Extension](https://contextblur.app)
-- [Chrome Web Store](https://chromewebstore.google.com/detail/contextblur/epnjbbgfnlpkaggfpjebakbnnhpogmfh)
+- [Downloads](https://contextblur.app/downloads)
+- [Pricing](https://contextblur.app/pricing)

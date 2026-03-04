@@ -2,19 +2,19 @@
   "name": "contextblur",
   "displayName": "ContextBlur",
   "description": "Blur sensitive data (PII, API keys, secrets) in your editor during screen sharing, pair programming, or live coding.",
-  "version": "1.0.0",
+  "version": "3.0.0",
   "publisher": "contextblur",
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/contextblur/vscode-contextblur"
   },
-  "icon": "icon.png",
   "engines": {
     "vscode": "^1.85.0"
   },
   "categories": [
-    "Other"
+    "Other",
+    "Programming Languages"
   ],
   "keywords": [
     "blur",
@@ -158,7 +158,9 @@
   "scripts": {
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
-    "package": "vsce package"
+    "prepackage": "npm run compile",
+    "package": "npx @vscode/vsce package",
+    "publish:vsce": "npx @vscode/vsce publish"
   },
   "devDependencies": {
     "@types/vscode": "^1.85.0",
