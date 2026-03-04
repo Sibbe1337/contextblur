@@ -3,7 +3,7 @@
   "displayName": "ContextBlur",
   "description": "Blur sensitive data (PII, API keys, secrets) in your editor during screen sharing, pair programming, or live coding.",
   "version": "3.0.0",
-  "publisher": "contextblur",
+  "publisher": "Smerda",
   "license": "MIT",
   "repository": {
     "type": "git",
