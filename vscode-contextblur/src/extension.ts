@@ -50,6 +50,18 @@ export function activate(context: vscode.ExtensionContext): void {
   );
 
   context.subscriptions.push(
+    vscode.commands.registerCommand('contextblur.goLiveMode', () => {
+      blurManager!.goLiveMode();
+    })
+  );
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand('contextblur.scanRisk', () => {
+      blurManager!.runRiskScan();
+    })
+  );
+
+  context.subscriptions.push(
     vscode.commands.registerCommand('contextblur.clearAll', () => {
       blurManager!.clearAll();
       vscode.window.showInformationMessage('ContextBlur: All blurs cleared.');
@@ -64,6 +76,9 @@ export function activate(context: vscode.ExtensionContext): void {
       // Style/pattern changes are handled by BlurManager's own listener
     })
   );
+
+  // Analyze active editor immediately so users see risk state without toggling first.
+  blurManager.primeActiveEditor();
 
   // ── Disposables ──
 

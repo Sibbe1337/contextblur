@@ -10,9 +10,25 @@ import * as config from './config';
 import { StatusBar } from './statusBar';
 import { minimatch } from './minimatch';
 
+type RiskLevel = 'safe' | 'warning' | 'critical';
+
+interface RiskReport {
+  level: RiskLevel;
+  totalMatches: number;
+  highMatches: number;
+  criticalMatches: number;
+}
+
+interface ScanResult {
+  ranges: vscode.Range[];
+  risk: RiskReport;
+}
+
 export class BlurManager {
   private blurredRanges = new Map<string, vscode.Range[]>();
   private manualRanges = new Map<string, vscode.Range[]>();
+  private riskByUri = new Map<string, RiskReport>();
+  private nudgedUris = new Set<string>();
   private autoBlurEnabled = false;
   private debounceTimer: ReturnType<typeof setTimeout> | null = null;
   private disposables: vscode.Disposable[] = [];
@@ -59,6 +75,63 @@ export class BlurManager {
   }
 
   /**
+   * Force-on mode before screen sharing: enable auto blur + scan + clear warning nudges.
+   */
+  goLiveMode(): void {
+    this.autoBlurEnabled = true;
+    this.statusBar.active = true;
+    const editor = vscode.window.activeTextEditor;
+    if (!editor) {
+      vscode.window.showInformationMessage('ContextBlur: Go Live enabled. Open a file to scan.');
+      return;
+    }
+
+    this.scanAndApply(editor);
+    const uri = editor.document.uri.toString();
+    const report = this.riskByUri.get(uri);
+    const count = this.getCount(uri);
+    const suffix =
+      report?.level === 'critical'
+        ? ' Critical patterns found and blurred.'
+        : report?.level === 'warning'
+          ? ' Sensitive patterns found and blurred.'
+          : ' No sensitive patterns detected.';
+    vscode.window.showInformationMessage(`ContextBlur: Go Live ready (${count} blurred).${suffix}`);
+    this.nudgedUris.delete(uri);
+  }
+
+  /**
+   * One-shot risk scan without changing blur mode.
+   */
+  runRiskScan(): void {
+    const editor = vscode.window.activeTextEditor;
+    if (!editor) {
+      vscode.window.showInformationMessage('ContextBlur: No active editor.');
+      return;
+    }
+
+    const scan = this.analyzeDocument(editor.document);
+    this.riskByUri.set(editor.document.uri.toString(), scan.risk);
+    this.statusBar.risk = scan.risk.level;
+    if (scan.risk.level === 'critical') {
+      vscode.window.showWarningMessage(
+        `ContextBlur: Critical risk (${scan.risk.criticalMatches} critical matches). Run Go Live Mode.`,
+        'Go Live Mode'
+      ).then((action) => {
+        if (action === 'Go Live Mode') {
+          this.goLiveMode();
+        }
+      });
+      return;
+    }
+
+    const label = scan.risk.level === 'warning' ? 'Warning' : 'Safe';
+    vscode.window.showInformationMessage(
+      `ContextBlur: ${label} (${scan.risk.totalMatches} matches, ${scan.risk.highMatches} high-risk).`
+    );
+  }
+
+  /**
    * Blur the current selection(s) manually.
    */
   blurSelection(editor: vscode.TextEditor): void {
@@ -85,6 +158,12 @@ export class BlurManager {
     const uri = editor.document.uri.toString();
     this.blurredRanges.delete(uri);
     this.manualRanges.delete(uri);
+    this.riskByUri.set(uri, {
+      level: 'safe',
+      totalMatches: 0,
+      highMatches: 0,
+      criticalMatches: 0,
+    });
     this.applyDecorations(editor);
   }
 
@@ -97,29 +176,53 @@ export class BlurManager {
 
     // Check exclude globs
     if (this.isExcluded(doc)) {
+      this.riskByUri.set(uri, {
+        level: 'safe',
+        totalMatches: 0,
+        highMatches: 0,
+        criticalMatches: 0,
+      });
+      this.statusBar.risk = 'safe';
       return;
     }
 
+    const scan = this.analyzeDocument(doc);
+    this.blurredRanges.set(uri, scan.ranges);
+    this.riskByUri.set(uri, scan.risk);
+    this.applyDecorations(editor);
+  }
+
+  /**
+   * Apply all decorations (auto + manual) to the editor.
+   */
+  private analyzeDocument(doc: vscode.TextDocument): ScanResult {
     const enabledMap = config.getEnabledPatterns();
     const patterns = getEnabledPatterns(enabledMap);
     const ranges: vscode.Range[] = [];
+
+    let totalMatches = 0;
+    let highMatches = 0;
+    let criticalMatches = 0;
 
     for (let lineIdx = 0; lineIdx < doc.lineCount; lineIdx++) {
       const line = doc.lineAt(lineIdx);
       const text = line.text;
 
       for (const pattern of patterns) {
-        // Check file filter for this pattern
         if (pattern.fileFilter && !this.matchesFileFilter(doc, pattern.fileFilter)) {
           continue;
         }
 
-        // Reset regex lastIndex for each line
         const regex = new RegExp(pattern.regex.source, pattern.regex.flags);
-
         let match: RegExpExecArray | null;
         while ((match = regex.exec(text)) !== null) {
-          // For envValue pattern, blur only the value (capture group 1)
+          totalMatches++;
+          if (pattern.severity === 'critical') {
+            criticalMatches++;
+          } else if (pattern.severity === 'high') {
+            highMatches++;
+          }
+
           if (pattern.key === 'envValue' && match[1]) {
             const valueStart = match.index + match[0].indexOf(match[1]);
             const startPos = new vscode.Position(lineIdx, valueStart);
@@ -131,7 +234,6 @@ export class BlurManager {
             ranges.push(new vscode.Range(startPos, endPos));
           }
 
-          // Prevent infinite loop on zero-length matches
           if (match[0].length === 0) {
             regex.lastIndex++;
           }
@@ -139,13 +241,23 @@ export class BlurManager {
       }
     }
 
-    this.blurredRanges.set(uri, ranges);
-    this.applyDecorations(editor);
+    const level = this.computeRiskLevel(totalMatches, highMatches, criticalMatches);
+    return {
+      ranges,
+      risk: { level, totalMatches, highMatches, criticalMatches },
+    };
   }
 
-  /**
-   * Apply all decorations (auto + manual) to the editor.
-   */
+  private computeRiskLevel(total: number, high: number, critical: number): RiskLevel {
+    if (critical > 0 || high >= 3) {
+      return 'critical';
+    }
+    if (high > 0 || total > 0) {
+      return 'warning';
+    }
+    return 'safe';
+  }
+
   private applyDecorations(editor: vscode.TextEditor): void {
     const uri = editor.document.uri.toString();
     const autoRanges = this.blurredRanges.get(uri) || [];
@@ -157,6 +269,7 @@ export class BlurManager {
     editor.setDecorations(decorationType, allRanges);
 
     this.statusBar.count = allRanges.length;
+    this.statusBar.risk = this.riskByUri.get(uri)?.level || 'safe';
   }
 
   /**
@@ -220,7 +333,10 @@ export class BlurManager {
           if (this.autoBlurEnabled) {
             this.scanAndApply(editor);
           } else {
+            const scan = this.analyzeDocument(editor.document);
+            this.riskByUri.set(editor.document.uri.toString(), scan.risk);
             this.applyDecorations(editor);
+            this.maybeNudgeForRisk(editor, scan.risk);
           }
         }
       })
@@ -237,7 +353,14 @@ export class BlurManager {
             clearTimeout(this.debounceTimer);
           }
           this.debounceTimer = setTimeout(() => {
-            this.scanAndApply(editor);
+            if (this.autoBlurEnabled) {
+              this.scanAndApply(editor);
+            } else {
+              const scan = this.analyzeDocument(editor.document);
+              this.riskByUri.set(editor.document.uri.toString(), scan.risk);
+              this.applyDecorations(editor);
+              this.maybeNudgeForRisk(editor, scan.risk);
+            }
           }, 500);
         }
       })
@@ -249,6 +372,8 @@ export class BlurManager {
         const uri = doc.uri.toString();
         this.blurredRanges.delete(uri);
         this.manualRanges.delete(uri);
+        this.riskByUri.delete(uri);
+        this.nudgedUris.delete(uri);
       })
     );
 
@@ -269,6 +394,49 @@ export class BlurManager {
         }
       })
     );
+  }
+
+  /**
+   * Analyze currently active editor on startup.
+   */
+  primeActiveEditor(): void {
+    const editor = vscode.window.activeTextEditor;
+    if (!editor) {
+      return;
+    }
+    const scan = this.analyzeDocument(editor.document);
+    this.riskByUri.set(editor.document.uri.toString(), scan.risk);
+    this.applyDecorations(editor);
+    this.maybeNudgeForRisk(editor, scan.risk);
+  }
+
+  private maybeNudgeForRisk(editor: vscode.TextEditor, risk: RiskReport): void {
+    if (!config.isRiskNudgeEnabled() || this.autoBlurEnabled) {
+      return;
+    }
+    if (risk.level === 'safe') {
+      return;
+    }
+    const uri = editor.document.uri.toString();
+    if (this.nudgedUris.has(uri)) {
+      return;
+    }
+
+    this.nudgedUris.add(uri);
+    const severity = risk.level === 'critical' ? 'Critical' : 'Sensitive';
+    vscode.window
+      .showWarningMessage(
+        `ContextBlur: ${severity} data detected in this file. Enable Go Live Mode before screen sharing?`,
+        'Go Live Mode',
+        'Run Risk Scan'
+      )
+      .then((action) => {
+        if (action === 'Go Live Mode') {
+          this.goLiveMode();
+        } else if (action === 'Run Risk Scan') {
+          this.runRiskScan();
+        }
+      });
   }
 
   dispose(): void {

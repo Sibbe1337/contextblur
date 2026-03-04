@@ -5,7 +5,9 @@ Blur sensitive data in your editor during screen sharing, pair programming, or l
 ## Features
 
 - **Auto-Blur** — Scans your code and blurs emails, phone numbers, SSNs, credit cards, API keys, AWS keys, JWTs, connection strings, private keys, and .env values
+- **Go Live Mode** — One shortcut enables auto-blur and runs an immediate full scan before screen sharing
 - **Manual Blur** — Select any text and blur it with a keyboard shortcut
+- **Risk Scan + Nudges** — Warns when high-risk secrets are detected while blur is off
 - **3 Blur Styles** — Blackout (default), highlight, or fade
 - **Status Bar** — Shows blur count and toggles auto-blur on click
 - **Configurable** — Enable/disable individual patterns, set blur style, exclude files
@@ -14,8 +16,10 @@ Blur sensitive data in your editor during screen sharing, pair programming, or l
 
 | Command | Keybinding | Description |
 |---------|-----------|-------------|
-| `ContextBlur: Toggle Auto-Blur` | `Ctrl+Shift+B` / `Cmd+Shift+B` | Toggle auto-blur on/off |
-| `ContextBlur: Blur Selection` | `Ctrl+Shift+H` / `Cmd+Shift+H` | Blur selected text manually |
+| `ContextBlur: Toggle Auto-Blur` | `Ctrl+Alt+B` / `Cmd+Alt+B` | Toggle auto-blur on/off |
+| `ContextBlur: Blur Selection` | `Ctrl+Alt+H` / `Cmd+Alt+H` | Blur selected text manually |
+| `ContextBlur: Go Live Mode (Enable + Scan)` | `Ctrl+Alt+G` / `Cmd+Alt+G` | Enable auto-blur and run a full scan |
+| `ContextBlur: Scan Risk (No Blur)` | `Ctrl+Alt+R` / `Cmd+Alt+R` | Check risk level without enabling blur |
 | `ContextBlur: Run Auto-Blur Scan` | — | One-shot scan of current file |
 | `ContextBlur: Clear All Blurs` | — | Remove all blurs in current file |
 
@@ -37,6 +41,7 @@ Blur sensitive data in your editor during screen sharing, pair programming, or l
 | `contextblur.patterns.privateKey` | `true` | Detect private key blocks |
 | `contextblur.patterns.envValue` | `true` | Detect values in .env files |
 | `contextblur.excludeFiles` | `["*.min.js","*.lock","*.map"]` | Glob patterns to skip |
+| `contextblur.nudgeOnRisk` | `true` | Show warning prompts when sensitive patterns are found while blur is off |
 
 ## Detected Patterns
 

@@ -62,6 +62,14 @@ export function getExcludeGlobs(): string[] {
 }
 
 /**
+ * Show proactive nudges when sensitive patterns are detected and auto-blur is off.
+ */
+export function isRiskNudgeEnabled(): boolean {
+  const config = vscode.workspace.getConfiguration(SECTION);
+  return config.get<boolean>('nudgeOnRisk', true);
+}
+
+/**
  * Register a listener for configuration changes.
  * Returns a disposable to unsubscribe.
  */

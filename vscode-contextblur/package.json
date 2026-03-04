@@ -2,7 +2,7 @@
   "name": "contextblur",
   "displayName": "ContextBlur",
   "description": "Blur sensitive data (PII, API keys, secrets) in your editor during screen sharing, pair programming, or live coding.",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "publisher": "Smerda",
   "license": "MIT",
   "repository": {
@@ -45,6 +45,14 @@
         "title": "ContextBlur: Run Auto-Blur Scan"
       },
       {
+        "command": "contextblur.goLiveMode",
+        "title": "ContextBlur: Go Live Mode (Enable + Scan)"
+      },
+      {
+        "command": "contextblur.scanRisk",
+        "title": "ContextBlur: Scan Risk (No Blur)"
+      },
+      {
         "command": "contextblur.clearAll",
         "title": "ContextBlur: Clear All Blurs"
       }
@@ -52,14 +60,39 @@
     "keybindings": [
       {
         "command": "contextblur.toggle",
+        "key": "ctrl+alt+b",
+        "mac": "cmd+alt+b",
+        "when": "editorTextFocus && !editorReadonly"
+      },
+      {
+        "command": "contextblur.blurSelection",
+        "key": "ctrl+alt+h",
+        "mac": "cmd+alt+h",
+        "when": "editorTextFocus && editorHasSelection && !editorReadonly"
+      },
+      {
+        "command": "contextblur.goLiveMode",
+        "key": "ctrl+alt+g",
+        "mac": "cmd+alt+g",
+        "when": "editorTextFocus && !editorReadonly"
+      },
+      {
+        "command": "contextblur.scanRisk",
+        "key": "ctrl+alt+r",
+        "mac": "cmd+alt+r",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "contextblur.toggle",
         "key": "ctrl+shift+b",
-        "mac": "cmd+shift+b"
+        "mac": "cmd+shift+b",
+        "when": "editorTextFocus && !editorReadonly"
       },
       {
         "command": "contextblur.blurSelection",
         "key": "ctrl+shift+h",
         "mac": "cmd+shift+h",
-        "when": "editorHasSelection"
+        "when": "editorTextFocus && editorHasSelection && !editorReadonly"
       }
     ],
     "configuration": {
@@ -151,6 +184,11 @@
             "type": "string"
           },
           "description": "Glob patterns for files to skip during auto-blur."
+        },
+        "contextblur.nudgeOnRisk": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show proactive warning prompts when sensitive patterns are detected while auto-blur is off."
         }
       }
     }
