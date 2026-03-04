@@ -23,6 +23,10 @@
     blurPhones: document.getElementById('blurPhones'),
     blurCards: document.getElementById('blurCards'),
     blurSSN: document.getElementById('blurSSN'),
+    blurDevApiKeys: document.getElementById('blurDevApiKeys'),
+    blurAWSKeys: document.getElementById('blurAWSKeys'),
+    blurDbConn: document.getElementById('blurDbConn'),
+    blurJWT: document.getElementById('blurJWT'),
     // Modal
     disclosureModal: document.getElementById('disclosureModal'),
     modalCancelBtn: document.getElementById('modalCancelBtn'),
@@ -345,6 +349,14 @@
       types.push('ssn');
       types.push('personnummer');
     }
+    if (elements.blurDevApiKeys.checked) {
+      types.push('apiKey');
+      types.push('privateKey');
+      types.push('openaiKey');
+    }
+    if (elements.blurAWSKeys.checked) types.push('awsKey');
+    if (elements.blurDbConn.checked) types.push('connectionString');
+    if (elements.blurJWT.checked) types.push('jwt');
     return types;
   }
 

@@ -183,7 +183,7 @@
             <span id="autoBlurProBadge" class="pro-badge">PRO</span>
           </div>
           <p class="feature-description">
-            Scan visible text to find and blur emails, phone numbers, SSNs, and credit cards.
+            Scan visible text to find and blur PII plus developer secrets like API keys and tokens.
           </p>
         </div>
       </div>
@@ -204,6 +204,23 @@
         <label class="checkbox-label">
           <input type="checkbox" id="blurSSN" checked>
           <span class="checkbox-text">SSN / Personnummer</span>
+        </label>
+        <div class="autoblur-divider">Developer Secrets</div>
+        <label class="checkbox-label">
+          <input type="checkbox" id="blurDevApiKeys" checked>
+          <span class="checkbox-text">API keys & tokens</span>
+        </label>
+        <label class="checkbox-label">
+          <input type="checkbox" id="blurAWSKeys" checked>
+          <span class="checkbox-text">AWS access keys</span>
+        </label>
+        <label class="checkbox-label">
+          <input type="checkbox" id="blurDbConn" checked>
+          <span class="checkbox-text">DB connection strings</span>
+        </label>
+        <label class="checkbox-label">
+          <input type="checkbox" id="blurJWT" checked>
+          <span class="checkbox-text">JWT tokens</span>
         </label>
       </div>
 

@@ -23,7 +23,14 @@
     phone: /(?:\+\d{1,3}[-.\s]?)?\(?\d{2,4}\)?[-.\s]?\d{3,4}[-.\s]?\d{3,4}\b/g,
     ssn: /\b\d{3}[-.\s]?\d{2}[-.\s]?\d{4}\b/g,
     creditCard: /\b(?:\d{4}[-.\s]?){3}\d{4}\b/g,
-    personnummer: /\b\d{6,8}[-.\s]?\d{4}\b/g
+    personnummer: /\b\d{6,8}[-.\s]?\d{4}\b/g,
+    // Developer secret patterns (ported from VS Code extension, tuned for browser DOM)
+    apiKey: /(?:api[_-]?key|api[_-]?secret|token|secret[_-]?key|access[_-]?key)\s*[:=]\s*['"]?([A-Za-z0-9_\-]{20,})['"]?/gi,
+    awsKey: /\bAKIA[0-9A-Z]{16}\b/g,
+    privateKey: /-----BEGIN\s[\w\s]*PRIVATE KEY-----/g,
+    connectionString: /(?:mongodb(?:\+srv)?|postgres(?:ql)?|mysql|redis|amqp|mssql):\/\/[^\s'"`,)}\]]+/gi,
+    jwt: /\beyJ[A-Za-z0-9_-]{10,}\.eyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\b/g,
+    openaiKey: /\bsk-[A-Za-z0-9]{20,}\b/g
   };
 
   // Custom cursor SVG
@@ -91,7 +98,9 @@
 
       case 'AUTO_BLUR_RUN':
         // EXPLICIT user action required - runs exactly once per request
-        const result = runAutoBlurOnce(message.types || ['email', 'phone', 'ssn', 'creditCard']);
+        const result = runAutoBlurOnce(
+          message.types || ['email', 'phone', 'ssn', 'personnummer', 'creditCard']
+        );
         sendResponse({ success: true, blurredCount: result.count });
         break;
 
@@ -663,7 +672,7 @@
 
     // Auto-blur
     runAutoBlur: ({ types } = {}) => {
-      const validTypes = types || ['email', 'phone', 'ssn', 'creditCard'];
+      const validTypes = types || ['email', 'phone', 'ssn', 'personnummer', 'creditCard'];
       const result = runAutoBlurOnce(validTypes);
       return { success: true, blurredCount: result.count };
     }
